@@ -15,6 +15,10 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'zktls_flutter/Sources/zktls_flutter/**/*'
   s.dependency 'Flutter'
+  # The native zkTLS SDK. Comes from the releases repo's pod once published;
+  # during local-binary-first dev, point the example Podfile at the locally
+  # built pod or xcframework (build-ios.sh in the zktls-sdk repo).
+  s.dependency 'ZktlsSDK'
   s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.

@@ -72,6 +72,15 @@ kotlin {
 }
 
 dependencies {
+    // The native zkTLS SDK. Local-binary-first: build the AAR from the zktls-sdk
+    // repo and drop it at android/libs/zktls-sdk.aar. Switch to the published
+    // coordinate once it exists: implementation("io.github.cr3dentials:zktls-sdk:1.0.0")
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
+    // A file AAR does not carry its own transitive deps, so declare the ones the
+    // SDK brings (see the SDK's integration-android.md).
+    implementation("net.java.dev.jna:jna:5.14.0@aar")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.mockito:mockito-core:5.0.0")
 }
