@@ -68,7 +68,7 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     val client = requireSession(sessionId)
     val act = activity ?: throw FlutterError("Internal", "no current activity for the login WebView")
     val presenter = if (disclosure != null) {
-      WebViewLoginPresenter(act, disclosure = toSdkDisclosure(disclosure))
+      WebViewLoginPresenter(act) { toSdkDisclosure(disclosure) }
     } else {
       WebViewLoginPresenter(act)
     }
@@ -171,15 +171,15 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   )
 
   private fun toPigeonPhase(p: SdkPhase): Phase = when (p) {
-    SdkPhase.loggingIn -> Phase.LOGGING_IN
-    SdkPhase.allocating -> Phase.ALLOCATING
-    SdkPhase.capturing -> Phase.CAPTURING
-    SdkPhase.captured -> Phase.CAPTURED
-    SdkPhase.proving -> Phase.PROVING
-    SdkPhase.proved -> Phase.PROVED
-    SdkPhase.claiming -> Phase.CLAIMING
-    SdkPhase.done -> Phase.DONE
-    SdkPhase.failed -> Phase.FAILED
+    SdkPhase.LOGGING_IN -> Phase.LOGGING_IN
+    SdkPhase.ALLOCATING -> Phase.ALLOCATING
+    SdkPhase.CAPTURING -> Phase.CAPTURING
+    SdkPhase.CAPTURED -> Phase.CAPTURED
+    SdkPhase.PROVING -> Phase.PROVING
+    SdkPhase.PROVED -> Phase.PROVED
+    SdkPhase.CLAIMING -> Phase.CLAIMING
+    SdkPhase.DONE -> Phase.DONE
+    SdkPhase.FAILED -> Phase.FAILED
   }
 }
 

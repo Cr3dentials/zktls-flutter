@@ -31,3 +31,6 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 /build/
 /coverage/
+
+# Locally built SDK binary (consumed from mavenLocal instead; see android/build.gradle.kts)
+android/libs/
