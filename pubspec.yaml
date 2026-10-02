@@ -1,7 +1,7 @@
 name: zktls_flutter
-description: "A new Flutter plugin project."
+description: "Flutter bridge for the zkTLS native SDK: drives its six verbs (login, capture, prove, claim, progress, cancel) from Dart over the compiled native binary."
 version: 0.0.1
-homepage:
+repository: https://github.com/Cr3dentials/zktls-flutter
 
 environment:
   sdk: ^3.13.4
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  meta: ^1.19.0
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
