@@ -1,3 +1,6 @@
+// Pigeon 29 renamed its generated error type (what older Pigeon called FlutterError)
+// to PigeonError, to stop clashing with Flutter's own FlutterError, and moved the
+// registration onto <HostApi>Setup.setUp.
 import Flutter
 import UIKit
 import ZktlsSDK
@@ -16,7 +19,7 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let instance = ZktlsFlutterPlugin()
-    ZktlsHostApi.setUp(binaryMessenger: registrar.messenger(), api: instance)
+    ZktlsHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
     ProgressStreamHandler.register(with: registrar.messenger(), streamHandler: instance.progress)
   }
 
@@ -27,7 +30,7 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
 
   private func require(_ sessionId: String) throws -> ZktlsClient {
     guard let c = client(sessionId) else {
-      throw FlutterError(code: "Internal", message: "unknown session", details: nil)
+      throw PigeonError(code: "Internal", message: "unknown session", details: nil)
     }
     return c
   }
@@ -93,7 +96,7 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
   @MainActor
   private func makePresenter(_ disclosure: Disclosure?) throws -> WebViewLoginPresenter {
     guard let vc = topViewController() else {
-      throw FlutterError(code: "Internal", message: "no view controller for the login WebView", details: nil)
+      throw PigeonError(code: "Internal", message: "no view controller for the login WebView", details: nil)
     }
     if let disclosure = disclosure {
       return WebViewLoginPresenter(presentingFrom: vc) { _ in toSdkDisclosure(disclosure) }
@@ -200,22 +203,22 @@ private func toPigeonPhase(_ p: ZktlsSDK.Phase) -> Phase {
 
 // Maps every SdkError to the code Dart matches on (see SdkErrorCode in
 // lib/zktls_flutter.dart); anything else is Internal.
-private func mapError(_ error: Error) -> FlutterError {
+private func mapError(_ error: Error) -> PigeonError {
   guard let e = error as? SdkError else {
-    return FlutterError(code: "Internal", message: (error as NSError).localizedDescription, details: nil)
+    return PigeonError(code: "Internal", message: (error as NSError).localizedDescription, details: nil)
   }
   switch e {
-  case .NotLoggedIn: return FlutterError(code: "NotLoggedIn", message: nil, details: nil)
-  case .SessionLost: return FlutterError(code: "SessionLost", message: nil, details: nil)
-  case .Cancelled: return FlutterError(code: "Cancelled", message: nil, details: nil)
-  case .WrongEvidence: return FlutterError(code: "WrongEvidence", message: nil, details: nil)
-  case .Truncated: return FlutterError(code: "Truncated", message: nil, details: nil)
-  case .ExtraResponse: return FlutterError(code: "ExtraResponse", message: nil, details: nil)
-  case .Reordered: return FlutterError(code: "Reordered", message: nil, details: nil)
-  case .LimitExceeded: return FlutterError(code: "LimitExceeded", message: nil, details: nil)
-  case .InsufficientMemory: return FlutterError(code: "InsufficientMemory", message: nil, details: nil)
-  case .Transport(let text): return FlutterError(code: "Transport", message: text, details: nil)
-  case .Policy(let text): return FlutterError(code: "Policy", message: text, details: nil)
-  @unknown default: return FlutterError(code: "Internal", message: nil, details: nil)
+  case .NotLoggedIn: return PigeonError(code: "NotLoggedIn", message: nil, details: nil)
+  case .SessionLost: return PigeonError(code: "SessionLost", message: nil, details: nil)
+  case .Cancelled: return PigeonError(code: "Cancelled", message: nil, details: nil)
+  case .WrongEvidence: return PigeonError(code: "WrongEvidence", message: nil, details: nil)
+  case .Truncated: return PigeonError(code: "Truncated", message: nil, details: nil)
+  case .ExtraResponse: return PigeonError(code: "ExtraResponse", message: nil, details: nil)
+  case .Reordered: return PigeonError(code: "Reordered", message: nil, details: nil)
+  case .LimitExceeded: return PigeonError(code: "LimitExceeded", message: nil, details: nil)
+  case .InsufficientMemory: return PigeonError(code: "InsufficientMemory", message: nil, details: nil)
+  case .Transport(let text): return PigeonError(code: "Transport", message: text, details: nil)
+  case .Policy(let text): return PigeonError(code: "Policy", message: text, details: nil)
+  @unknown default: return PigeonError(code: "Internal", message: nil, details: nil)
   }
 }
