@@ -21,6 +21,9 @@ import 'package:pigeon/pigeon.dart';
 // The native Phase enum.
 enum Phase {
   loggingIn,
+  collecting,
+  attesting,
+  detached,
   allocating,
   capturing,
   captured,
@@ -43,6 +46,7 @@ class SessionConfig {
     required this.clientRegion,
     required this.networkKey,
     required this.trustBundleJson,
+    this.trustBundleUrl,
     required this.trustOperatorKey,
     required this.policyBundleJson,
     required this.policyBundleDigest,
@@ -57,6 +61,9 @@ class SessionConfig {
   String clientRegion;
   String networkKey;
   String trustBundleJson;
+  // Where the SDK refetches the trust bundle once when an enclave's key is not
+  // listed yet; null or empty keeps the bundle given.
+  String? trustBundleUrl;
   String trustOperatorKey;
   String policyBundleJson;
   String policyBundleDigest;

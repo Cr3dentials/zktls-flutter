@@ -99,6 +99,9 @@ int _deepHash(Object? value) {
 
 enum Phase {
   loggingIn,
+  collecting,
+  attesting,
+  detached,
   allocating,
   capturing,
   captured,
@@ -120,6 +123,7 @@ class SessionConfig {
     required this.clientRegion,
     required this.networkKey,
     required this.trustBundleJson,
+    this.trustBundleUrl,
     required this.trustOperatorKey,
     required this.policyBundleJson,
     required this.policyBundleDigest,
@@ -143,6 +147,8 @@ class SessionConfig {
 
   String trustBundleJson;
 
+  String? trustBundleUrl;
+
   String trustOperatorKey;
 
   String policyBundleJson;
@@ -160,6 +166,7 @@ class SessionConfig {
       clientRegion,
       networkKey,
       trustBundleJson,
+      trustBundleUrl,
       trustOperatorKey,
       policyBundleJson,
       policyBundleDigest,
@@ -181,9 +188,10 @@ class SessionConfig {
       clientRegion: result[6]! as String,
       networkKey: result[7]! as String,
       trustBundleJson: result[8]! as String,
-      trustOperatorKey: result[9]! as String,
-      policyBundleJson: result[10]! as String,
-      policyBundleDigest: result[11]! as String,
+      trustBundleUrl: result[9] as String?,
+      trustOperatorKey: result[10]! as String,
+      policyBundleJson: result[11]! as String,
+      policyBundleDigest: result[12]! as String,
     );
   }
 
@@ -196,7 +204,7 @@ class SessionConfig {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(baseUrl, other.baseUrl) && _deepEquals(appCredential, other.appCredential) && _deepEquals(userIdHash, other.userIdHash) && _deepEquals(profileId, other.profileId) && _deepEquals(policyId, other.policyId) && _deepEquals(idempotencyKey, other.idempotencyKey) && _deepEquals(clientRegion, other.clientRegion) && _deepEquals(networkKey, other.networkKey) && _deepEquals(trustBundleJson, other.trustBundleJson) && _deepEquals(trustOperatorKey, other.trustOperatorKey) && _deepEquals(policyBundleJson, other.policyBundleJson) && _deepEquals(policyBundleDigest, other.policyBundleDigest);
+    return _deepEquals(baseUrl, other.baseUrl) && _deepEquals(appCredential, other.appCredential) && _deepEquals(userIdHash, other.userIdHash) && _deepEquals(profileId, other.profileId) && _deepEquals(policyId, other.policyId) && _deepEquals(idempotencyKey, other.idempotencyKey) && _deepEquals(clientRegion, other.clientRegion) && _deepEquals(networkKey, other.networkKey) && _deepEquals(trustBundleJson, other.trustBundleJson) && _deepEquals(trustBundleUrl, other.trustBundleUrl) && _deepEquals(trustOperatorKey, other.trustOperatorKey) && _deepEquals(policyBundleJson, other.policyBundleJson) && _deepEquals(policyBundleDigest, other.policyBundleDigest);
   }
 
   @override
@@ -205,7 +213,7 @@ class SessionConfig {
 
   @override
   String toString() {
-    return 'SessionConfig(baseUrl: $baseUrl, appCredential: $appCredential, userIdHash: $userIdHash, profileId: $profileId, policyId: $policyId, idempotencyKey: $idempotencyKey, clientRegion: $clientRegion, networkKey: $networkKey, trustBundleJson: $trustBundleJson, trustOperatorKey: $trustOperatorKey, policyBundleJson: $policyBundleJson, policyBundleDigest: $policyBundleDigest)';
+    return 'SessionConfig(baseUrl: $baseUrl, appCredential: $appCredential, userIdHash: $userIdHash, profileId: $profileId, policyId: $policyId, idempotencyKey: $idempotencyKey, clientRegion: $clientRegion, networkKey: $networkKey, trustBundleJson: $trustBundleJson, trustBundleUrl: $trustBundleUrl, trustOperatorKey: $trustOperatorKey, policyBundleJson: $policyBundleJson, policyBundleDigest: $policyBundleDigest)';
   }
 }
 
