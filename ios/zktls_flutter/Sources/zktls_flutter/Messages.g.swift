@@ -186,14 +186,17 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
 
 enum Phase: Int, CaseIterable {
   case loggingIn = 0
-  case allocating = 1
-  case capturing = 2
-  case captured = 3
-  case proving = 4
-  case proved = 5
-  case claiming = 6
-  case done = 7
-  case failed = 8
+  case collecting = 1
+  case attesting = 2
+  case detached = 3
+  case allocating = 4
+  case capturing = 5
+  case captured = 6
+  case proving = 7
+  case proved = 8
+  case claiming = 9
+  case done = 10
+  case failed = 11
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
@@ -207,6 +210,7 @@ struct SessionConfig: Hashable, CustomStringConvertible {
   var clientRegion: String
   var networkKey: String
   var trustBundleJson: String
+  var trustBundleUrl: String? = nil
   var trustOperatorKey: String
   var policyBundleJson: String
   var policyBundleDigest: String
@@ -223,9 +227,10 @@ struct SessionConfig: Hashable, CustomStringConvertible {
     let clientRegion = pigeonVar_list[6] as! String
     let networkKey = pigeonVar_list[7] as! String
     let trustBundleJson = pigeonVar_list[8] as! String
-    let trustOperatorKey = pigeonVar_list[9] as! String
-    let policyBundleJson = pigeonVar_list[10] as! String
-    let policyBundleDigest = pigeonVar_list[11] as! String
+    let trustBundleUrl: String? = nilOrValue(pigeonVar_list[9])
+    let trustOperatorKey = pigeonVar_list[10] as! String
+    let policyBundleJson = pigeonVar_list[11] as! String
+    let policyBundleDigest = pigeonVar_list[12] as! String
 
     return SessionConfig(
       baseUrl: baseUrl,
@@ -237,6 +242,7 @@ struct SessionConfig: Hashable, CustomStringConvertible {
       clientRegion: clientRegion,
       networkKey: networkKey,
       trustBundleJson: trustBundleJson,
+      trustBundleUrl: trustBundleUrl,
       trustOperatorKey: trustOperatorKey,
       policyBundleJson: policyBundleJson,
       policyBundleDigest: policyBundleDigest
@@ -253,6 +259,7 @@ struct SessionConfig: Hashable, CustomStringConvertible {
       clientRegion,
       networkKey,
       trustBundleJson,
+      trustBundleUrl,
       trustOperatorKey,
       policyBundleJson,
       policyBundleDigest,
@@ -262,7 +269,7 @@ struct SessionConfig: Hashable, CustomStringConvertible {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return MessagesPigeonInternal.deepEquals(lhs.baseUrl, rhs.baseUrl) && MessagesPigeonInternal.deepEquals(lhs.appCredential, rhs.appCredential) && MessagesPigeonInternal.deepEquals(lhs.userIdHash, rhs.userIdHash) && MessagesPigeonInternal.deepEquals(lhs.profileId, rhs.profileId) && MessagesPigeonInternal.deepEquals(lhs.policyId, rhs.policyId) && MessagesPigeonInternal.deepEquals(lhs.idempotencyKey, rhs.idempotencyKey) && MessagesPigeonInternal.deepEquals(lhs.clientRegion, rhs.clientRegion) && MessagesPigeonInternal.deepEquals(lhs.networkKey, rhs.networkKey) && MessagesPigeonInternal.deepEquals(lhs.trustBundleJson, rhs.trustBundleJson) && MessagesPigeonInternal.deepEquals(lhs.trustOperatorKey, rhs.trustOperatorKey) && MessagesPigeonInternal.deepEquals(lhs.policyBundleJson, rhs.policyBundleJson) && MessagesPigeonInternal.deepEquals(lhs.policyBundleDigest, rhs.policyBundleDigest)
+    return MessagesPigeonInternal.deepEquals(lhs.baseUrl, rhs.baseUrl) && MessagesPigeonInternal.deepEquals(lhs.appCredential, rhs.appCredential) && MessagesPigeonInternal.deepEquals(lhs.userIdHash, rhs.userIdHash) && MessagesPigeonInternal.deepEquals(lhs.profileId, rhs.profileId) && MessagesPigeonInternal.deepEquals(lhs.policyId, rhs.policyId) && MessagesPigeonInternal.deepEquals(lhs.idempotencyKey, rhs.idempotencyKey) && MessagesPigeonInternal.deepEquals(lhs.clientRegion, rhs.clientRegion) && MessagesPigeonInternal.deepEquals(lhs.networkKey, rhs.networkKey) && MessagesPigeonInternal.deepEquals(lhs.trustBundleJson, rhs.trustBundleJson) && MessagesPigeonInternal.deepEquals(lhs.trustBundleUrl, rhs.trustBundleUrl) && MessagesPigeonInternal.deepEquals(lhs.trustOperatorKey, rhs.trustOperatorKey) && MessagesPigeonInternal.deepEquals(lhs.policyBundleJson, rhs.policyBundleJson) && MessagesPigeonInternal.deepEquals(lhs.policyBundleDigest, rhs.policyBundleDigest)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -276,13 +283,14 @@ struct SessionConfig: Hashable, CustomStringConvertible {
     MessagesPigeonInternal.deepHash(value: clientRegion, hasher: &hasher)
     MessagesPigeonInternal.deepHash(value: networkKey, hasher: &hasher)
     MessagesPigeonInternal.deepHash(value: trustBundleJson, hasher: &hasher)
+    MessagesPigeonInternal.deepHash(value: trustBundleUrl, hasher: &hasher)
     MessagesPigeonInternal.deepHash(value: trustOperatorKey, hasher: &hasher)
     MessagesPigeonInternal.deepHash(value: policyBundleJson, hasher: &hasher)
     MessagesPigeonInternal.deepHash(value: policyBundleDigest, hasher: &hasher)
   }
 
   public var description: String {
-    return "SessionConfig(baseUrl: \(String(describing: baseUrl)), appCredential: \(String(describing: appCredential)), userIdHash: \(String(describing: userIdHash)), profileId: \(String(describing: profileId)), policyId: \(String(describing: policyId)), idempotencyKey: \(String(describing: idempotencyKey)), clientRegion: \(String(describing: clientRegion)), networkKey: \(String(describing: networkKey)), trustBundleJson: \(String(describing: trustBundleJson)), trustOperatorKey: \(String(describing: trustOperatorKey)), policyBundleJson: \(String(describing: policyBundleJson)), policyBundleDigest: \(String(describing: policyBundleDigest)))"
+    return "SessionConfig(baseUrl: \(String(describing: baseUrl)), appCredential: \(String(describing: appCredential)), userIdHash: \(String(describing: userIdHash)), profileId: \(String(describing: profileId)), policyId: \(String(describing: policyId)), idempotencyKey: \(String(describing: idempotencyKey)), clientRegion: \(String(describing: clientRegion)), networkKey: \(String(describing: networkKey)), trustBundleJson: \(String(describing: trustBundleJson)), trustBundleUrl: \(String(describing: trustBundleUrl)), trustOperatorKey: \(String(describing: trustOperatorKey)), policyBundleJson: \(String(describing: policyBundleJson)), policyBundleDigest: \(String(describing: policyBundleDigest)))"
   }
 }
 

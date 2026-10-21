@@ -142,6 +142,7 @@ private func toSdkConfig(_ c: SessionConfig) -> ZktlsSDK.SessionConfig {
     clientRegion: c.clientRegion,
     networkKey: c.networkKey,
     trustBundleJson: c.trustBundleJson,
+    trustBundleUrl: c.trustBundleUrl ?? "",
     trustOperatorKey: c.trustOperatorKey,
     policyBundleJson: c.policyBundleJson,
     policyBundleDigest: c.policyBundleDigest
@@ -189,6 +190,9 @@ private func toPigeonClaim(_ c: ZktlsSDK.Claim) -> Claim {
 private func toPigeonPhase(_ p: ZktlsSDK.Phase) -> Phase {
   switch p {
   case .loggingIn: return .loggingIn
+  case .collecting: return .collecting
+  case .attesting: return .attesting
+  case .detached: return .detached
   case .allocating: return .allocating
   case .capturing: return .capturing
   case .captured: return .captured

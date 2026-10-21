@@ -134,6 +134,7 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     clientRegion = c.clientRegion,
     networkKey = c.networkKey,
     trustBundleJson = c.trustBundleJson,
+    trustBundleUrl = c.trustBundleUrl ?: "",
     trustOperatorKey = c.trustOperatorKey,
     policyBundleJson = c.policyBundleJson,
     policyBundleDigest = c.policyBundleDigest,
@@ -172,6 +173,9 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
 
   private fun toPigeonPhase(p: SdkPhase): Phase = when (p) {
     SdkPhase.LOGGING_IN -> Phase.LOGGING_IN
+    SdkPhase.COLLECTING -> Phase.COLLECTING
+    SdkPhase.ATTESTING -> Phase.ATTESTING
+    SdkPhase.DETACHED -> Phase.DETACHED
     SdkPhase.ALLOCATING -> Phase.ALLOCATING
     SdkPhase.CAPTURING -> Phase.CAPTURING
     SdkPhase.CAPTURED -> Phase.CAPTURED

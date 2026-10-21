@@ -200,14 +200,17 @@ class FlutterError (
 
 enum class Phase(val raw: Int) {
   LOGGING_IN(0),
-  ALLOCATING(1),
-  CAPTURING(2),
-  CAPTURED(3),
-  PROVING(4),
-  PROVED(5),
-  CLAIMING(6),
-  DONE(7),
-  FAILED(8);
+  COLLECTING(1),
+  ATTESTING(2),
+  DETACHED(3),
+  ALLOCATING(4),
+  CAPTURING(5),
+  CAPTURED(6),
+  PROVING(7),
+  PROVED(8),
+  CLAIMING(9),
+  DONE(10),
+  FAILED(11);
 
   companion object {
     fun ofRaw(raw: Int): Phase? {
@@ -227,6 +230,7 @@ data class SessionConfig (
   val clientRegion: String,
   val networkKey: String,
   val trustBundleJson: String,
+  val trustBundleUrl: String? = null,
   val trustOperatorKey: String,
   val policyBundleJson: String,
   val policyBundleDigest: String
@@ -243,10 +247,11 @@ data class SessionConfig (
       val clientRegion = pigeonVar_list[6] as String
       val networkKey = pigeonVar_list[7] as String
       val trustBundleJson = pigeonVar_list[8] as String
-      val trustOperatorKey = pigeonVar_list[9] as String
-      val policyBundleJson = pigeonVar_list[10] as String
-      val policyBundleDigest = pigeonVar_list[11] as String
-      return SessionConfig(baseUrl, appCredential, userIdHash, profileId, policyId, idempotencyKey, clientRegion, networkKey, trustBundleJson, trustOperatorKey, policyBundleJson, policyBundleDigest)
+      val trustBundleUrl = pigeonVar_list[9] as String?
+      val trustOperatorKey = pigeonVar_list[10] as String
+      val policyBundleJson = pigeonVar_list[11] as String
+      val policyBundleDigest = pigeonVar_list[12] as String
+      return SessionConfig(baseUrl, appCredential, userIdHash, profileId, policyId, idempotencyKey, clientRegion, networkKey, trustBundleJson, trustBundleUrl, trustOperatorKey, policyBundleJson, policyBundleDigest)
     }
   }
   fun toList(): List<Any?> {
@@ -260,6 +265,7 @@ data class SessionConfig (
       clientRegion,
       networkKey,
       trustBundleJson,
+      trustBundleUrl,
       trustOperatorKey,
       policyBundleJson,
       policyBundleDigest,
@@ -273,7 +279,7 @@ data class SessionConfig (
       return true
     }
     val other = other as SessionConfig
-    return MessagesPigeonUtils.deepEquals(this.baseUrl, other.baseUrl) && MessagesPigeonUtils.deepEquals(this.appCredential, other.appCredential) && MessagesPigeonUtils.deepEquals(this.userIdHash, other.userIdHash) && MessagesPigeonUtils.deepEquals(this.profileId, other.profileId) && MessagesPigeonUtils.deepEquals(this.policyId, other.policyId) && MessagesPigeonUtils.deepEquals(this.idempotencyKey, other.idempotencyKey) && MessagesPigeonUtils.deepEquals(this.clientRegion, other.clientRegion) && MessagesPigeonUtils.deepEquals(this.networkKey, other.networkKey) && MessagesPigeonUtils.deepEquals(this.trustBundleJson, other.trustBundleJson) && MessagesPigeonUtils.deepEquals(this.trustOperatorKey, other.trustOperatorKey) && MessagesPigeonUtils.deepEquals(this.policyBundleJson, other.policyBundleJson) && MessagesPigeonUtils.deepEquals(this.policyBundleDigest, other.policyBundleDigest)
+    return MessagesPigeonUtils.deepEquals(this.baseUrl, other.baseUrl) && MessagesPigeonUtils.deepEquals(this.appCredential, other.appCredential) && MessagesPigeonUtils.deepEquals(this.userIdHash, other.userIdHash) && MessagesPigeonUtils.deepEquals(this.profileId, other.profileId) && MessagesPigeonUtils.deepEquals(this.policyId, other.policyId) && MessagesPigeonUtils.deepEquals(this.idempotencyKey, other.idempotencyKey) && MessagesPigeonUtils.deepEquals(this.clientRegion, other.clientRegion) && MessagesPigeonUtils.deepEquals(this.networkKey, other.networkKey) && MessagesPigeonUtils.deepEquals(this.trustBundleJson, other.trustBundleJson) && MessagesPigeonUtils.deepEquals(this.trustBundleUrl, other.trustBundleUrl) && MessagesPigeonUtils.deepEquals(this.trustOperatorKey, other.trustOperatorKey) && MessagesPigeonUtils.deepEquals(this.policyBundleJson, other.policyBundleJson) && MessagesPigeonUtils.deepEquals(this.policyBundleDigest, other.policyBundleDigest)
   }
 
   override fun hashCode(): Int {
@@ -287,13 +293,14 @@ data class SessionConfig (
     result = 31 * result + MessagesPigeonUtils.deepHash(this.clientRegion)
     result = 31 * result + MessagesPigeonUtils.deepHash(this.networkKey)
     result = 31 * result + MessagesPigeonUtils.deepHash(this.trustBundleJson)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.trustBundleUrl)
     result = 31 * result + MessagesPigeonUtils.deepHash(this.trustOperatorKey)
     result = 31 * result + MessagesPigeonUtils.deepHash(this.policyBundleJson)
     result = 31 * result + MessagesPigeonUtils.deepHash(this.policyBundleDigest)
     return result
   }
   override fun toString(): String {
-    return "SessionConfig(baseUrl=$baseUrl, appCredential=$appCredential, userIdHash=$userIdHash, profileId=$profileId, policyId=$policyId, idempotencyKey=$idempotencyKey, clientRegion=$clientRegion, networkKey=$networkKey, trustBundleJson=$trustBundleJson, trustOperatorKey=$trustOperatorKey, policyBundleJson=$policyBundleJson, policyBundleDigest=$policyBundleDigest)"
+    return "SessionConfig(baseUrl=$baseUrl, appCredential=$appCredential, userIdHash=$userIdHash, profileId=$profileId, policyId=$policyId, idempotencyKey=$idempotencyKey, clientRegion=$clientRegion, networkKey=$networkKey, trustBundleJson=$trustBundleJson, trustBundleUrl=$trustBundleUrl, trustOperatorKey=$trustOperatorKey, policyBundleJson=$policyBundleJson, policyBundleDigest=$policyBundleDigest)"
   }
 }
 
