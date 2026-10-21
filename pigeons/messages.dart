@@ -131,6 +131,113 @@ class ProofReport {
   int receivedBytes;
 }
 
+// One per tree run. Mirrors the native TreeRunConfig field for field.
+class TreeRunConfig {
+  TreeRunConfig({
+    required this.baseUrl,
+    required this.appCredential,
+    required this.userIdHash,
+    required this.idempotencyKey,
+    required this.clientRegion,
+    required this.networkKey,
+    required this.platformId,
+    required this.trustBundleJson,
+    this.trustBundleUrl,
+    required this.trustOperatorKey,
+    required this.policyBundleJson,
+    required this.policyBundleDigest,
+    required this.relyingPartyNonceHex,
+    required this.resultUrl,
+    required this.resultToken,
+    required this.paramsJson,
+  });
+
+  String baseUrl;
+  String appCredential;
+  String userIdHash;
+  String idempotencyKey;
+  String clientRegion;
+  String networkKey;
+  String platformId;
+  String trustBundleJson;
+  // As SessionConfig.trustBundleUrl: null or empty keeps the bundle given.
+  String? trustBundleUrl;
+  String trustOperatorKey;
+  String policyBundleJson;
+  String policyBundleDigest;
+  String relyingPartyNonceHex;
+  String resultUrl;
+  String resultToken;
+  String paramsJson;
+}
+
+// The consent screen shown before the platform's pages open. All four are
+// required: a tree run has no standard text.
+class TreeDisclosure {
+  TreeDisclosure({
+    required this.title,
+    required this.message,
+    required this.accept,
+    required this.decline,
+  });
+
+  String title;
+  String message;
+  String accept;
+  String decline;
+}
+
+// The native SourceEvidence enum.
+enum SourceEvidence { observed, attested }
+
+class TreeSource {
+  TreeSource({
+    required this.storeAs,
+    required this.evidence,
+    required this.rows,
+    required this.pages,
+    required this.bytes,
+    required this.complete,
+  });
+
+  String storeAs;
+  SourceEvidence evidence;
+  int rows; // u64
+  int pages;
+  int bytes; // u64
+  bool complete;
+}
+
+// What the app learns from a tree run: how it ended and each source's counts,
+// never the data.
+class TreeSummary {
+  TreeSummary({
+    required this.succeeded,
+    required this.error,
+    required this.sources,
+    this.claim,
+    required this.apiCalls,
+    required this.durationMs,
+    required this.delivered,
+    required this.deliveryError,
+    required this.resultBytes,
+    required this.isolation,
+    required this.handedOff,
+  });
+
+  bool succeeded;
+  String error;
+  List<TreeSource> sources;
+  Claim? claim;
+  int apiCalls;
+  int durationMs; // u64
+  bool delivered;
+  String deliveryError;
+  int resultBytes; // u64
+  String isolation;
+  bool handedOff;
+}
+
 class ProgressEvent {
   ProgressEvent({
     required this.sessionId,
@@ -143,8 +250,9 @@ class ProgressEvent {
   int percent;
 }
 
-// The six verbs, plus create/dispose for the session lifetime. The native side
-// owns the ZktlsClient and its opaque handles, keyed by the returned sessionId.
+// The six verbs and runTree, plus create/dispose for the session lifetime. The
+// native side owns the ZktlsClient and its opaque handles, keyed by the
+// returned sessionId.
 @HostApi()
 abstract class ZktlsHostApi {
   @async
@@ -161,6 +269,18 @@ abstract class ZktlsHostApi {
 
   @async
   Claim claim(String sessionId);
+
+  // A session for tree runs: a no-arg native ZktlsClient. The proof verbs on it
+  // fail with the SDK's own Policy error.
+  @async
+  String createTree();
+
+  @async
+  TreeSummary runTree(
+    String sessionId,
+    TreeRunConfig config,
+    TreeDisclosure disclosure,
+  );
 
   // Synchronous: must reach a verb in flight.
   void cancel(String sessionId);

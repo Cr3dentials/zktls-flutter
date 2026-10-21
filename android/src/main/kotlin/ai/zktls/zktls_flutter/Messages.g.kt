@@ -219,6 +219,17 @@ enum class Phase(val raw: Int) {
   }
 }
 
+enum class SourceEvidence(val raw: Int) {
+  OBSERVED(0),
+  ATTESTED(1);
+
+  companion object {
+    fun ofRaw(raw: Int): SourceEvidence? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 /** Generated class from Pigeon that represents data sent in messages. */
 data class SessionConfig (
   val baseUrl: String,
@@ -525,6 +536,286 @@ data class ProofReport (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class TreeRunConfig (
+  val baseUrl: String,
+  val appCredential: String,
+  val userIdHash: String,
+  val idempotencyKey: String,
+  val clientRegion: String,
+  val networkKey: String,
+  val platformId: String,
+  val trustBundleJson: String,
+  val trustBundleUrl: String? = null,
+  val trustOperatorKey: String,
+  val policyBundleJson: String,
+  val policyBundleDigest: String,
+  val relyingPartyNonceHex: String,
+  val resultUrl: String,
+  val resultToken: String,
+  val paramsJson: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TreeRunConfig {
+      val baseUrl = pigeonVar_list[0] as String
+      val appCredential = pigeonVar_list[1] as String
+      val userIdHash = pigeonVar_list[2] as String
+      val idempotencyKey = pigeonVar_list[3] as String
+      val clientRegion = pigeonVar_list[4] as String
+      val networkKey = pigeonVar_list[5] as String
+      val platformId = pigeonVar_list[6] as String
+      val trustBundleJson = pigeonVar_list[7] as String
+      val trustBundleUrl = pigeonVar_list[8] as String?
+      val trustOperatorKey = pigeonVar_list[9] as String
+      val policyBundleJson = pigeonVar_list[10] as String
+      val policyBundleDigest = pigeonVar_list[11] as String
+      val relyingPartyNonceHex = pigeonVar_list[12] as String
+      val resultUrl = pigeonVar_list[13] as String
+      val resultToken = pigeonVar_list[14] as String
+      val paramsJson = pigeonVar_list[15] as String
+      return TreeRunConfig(baseUrl, appCredential, userIdHash, idempotencyKey, clientRegion, networkKey, platformId, trustBundleJson, trustBundleUrl, trustOperatorKey, policyBundleJson, policyBundleDigest, relyingPartyNonceHex, resultUrl, resultToken, paramsJson)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      baseUrl,
+      appCredential,
+      userIdHash,
+      idempotencyKey,
+      clientRegion,
+      networkKey,
+      platformId,
+      trustBundleJson,
+      trustBundleUrl,
+      trustOperatorKey,
+      policyBundleJson,
+      policyBundleDigest,
+      relyingPartyNonceHex,
+      resultUrl,
+      resultToken,
+      paramsJson,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as TreeRunConfig
+    return MessagesPigeonUtils.deepEquals(this.baseUrl, other.baseUrl) && MessagesPigeonUtils.deepEquals(this.appCredential, other.appCredential) && MessagesPigeonUtils.deepEquals(this.userIdHash, other.userIdHash) && MessagesPigeonUtils.deepEquals(this.idempotencyKey, other.idempotencyKey) && MessagesPigeonUtils.deepEquals(this.clientRegion, other.clientRegion) && MessagesPigeonUtils.deepEquals(this.networkKey, other.networkKey) && MessagesPigeonUtils.deepEquals(this.platformId, other.platformId) && MessagesPigeonUtils.deepEquals(this.trustBundleJson, other.trustBundleJson) && MessagesPigeonUtils.deepEquals(this.trustBundleUrl, other.trustBundleUrl) && MessagesPigeonUtils.deepEquals(this.trustOperatorKey, other.trustOperatorKey) && MessagesPigeonUtils.deepEquals(this.policyBundleJson, other.policyBundleJson) && MessagesPigeonUtils.deepEquals(this.policyBundleDigest, other.policyBundleDigest) && MessagesPigeonUtils.deepEquals(this.relyingPartyNonceHex, other.relyingPartyNonceHex) && MessagesPigeonUtils.deepEquals(this.resultUrl, other.resultUrl) && MessagesPigeonUtils.deepEquals(this.resultToken, other.resultToken) && MessagesPigeonUtils.deepEquals(this.paramsJson, other.paramsJson)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.baseUrl)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.appCredential)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.userIdHash)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.idempotencyKey)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.clientRegion)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.networkKey)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.platformId)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.trustBundleJson)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.trustBundleUrl)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.trustOperatorKey)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.policyBundleJson)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.policyBundleDigest)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.relyingPartyNonceHex)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.resultUrl)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.resultToken)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.paramsJson)
+    return result
+  }
+  override fun toString(): String {
+    return "TreeRunConfig(baseUrl=$baseUrl, appCredential=$appCredential, userIdHash=$userIdHash, idempotencyKey=$idempotencyKey, clientRegion=$clientRegion, networkKey=$networkKey, platformId=$platformId, trustBundleJson=$trustBundleJson, trustBundleUrl=$trustBundleUrl, trustOperatorKey=$trustOperatorKey, policyBundleJson=$policyBundleJson, policyBundleDigest=$policyBundleDigest, relyingPartyNonceHex=$relyingPartyNonceHex, resultUrl=$resultUrl, resultToken=$resultToken, paramsJson=$paramsJson)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class TreeDisclosure (
+  val title: String,
+  val message: String,
+  val accept: String,
+  val decline: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TreeDisclosure {
+      val title = pigeonVar_list[0] as String
+      val message = pigeonVar_list[1] as String
+      val accept = pigeonVar_list[2] as String
+      val decline = pigeonVar_list[3] as String
+      return TreeDisclosure(title, message, accept, decline)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      title,
+      message,
+      accept,
+      decline,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as TreeDisclosure
+    return MessagesPigeonUtils.deepEquals(this.title, other.title) && MessagesPigeonUtils.deepEquals(this.message, other.message) && MessagesPigeonUtils.deepEquals(this.accept, other.accept) && MessagesPigeonUtils.deepEquals(this.decline, other.decline)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.title)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.message)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.accept)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.decline)
+    return result
+  }
+  override fun toString(): String {
+    return "TreeDisclosure(title=$title, message=$message, accept=$accept, decline=$decline)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class TreeSource (
+  val storeAs: String,
+  val evidence: SourceEvidence,
+  val rows: Long,
+  val pages: Long,
+  val bytes: Long,
+  val complete: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TreeSource {
+      val storeAs = pigeonVar_list[0] as String
+      val evidence = pigeonVar_list[1] as SourceEvidence
+      val rows = pigeonVar_list[2] as Long
+      val pages = pigeonVar_list[3] as Long
+      val bytes = pigeonVar_list[4] as Long
+      val complete = pigeonVar_list[5] as Boolean
+      return TreeSource(storeAs, evidence, rows, pages, bytes, complete)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      storeAs,
+      evidence,
+      rows,
+      pages,
+      bytes,
+      complete,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as TreeSource
+    return MessagesPigeonUtils.deepEquals(this.storeAs, other.storeAs) && MessagesPigeonUtils.deepEquals(this.evidence, other.evidence) && MessagesPigeonUtils.deepEquals(this.rows, other.rows) && MessagesPigeonUtils.deepEquals(this.pages, other.pages) && MessagesPigeonUtils.deepEquals(this.bytes, other.bytes) && MessagesPigeonUtils.deepEquals(this.complete, other.complete)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.storeAs)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.evidence)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.rows)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.pages)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.bytes)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.complete)
+    return result
+  }
+  override fun toString(): String {
+    return "TreeSource(storeAs=$storeAs, evidence=$evidence, rows=$rows, pages=$pages, bytes=$bytes, complete=$complete)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class TreeSummary (
+  val succeeded: Boolean,
+  val error: String,
+  val sources: List<TreeSource>,
+  val claim: Claim? = null,
+  val apiCalls: Long,
+  val durationMs: Long,
+  val delivered: Boolean,
+  val deliveryError: String,
+  val resultBytes: Long,
+  val isolation: String,
+  val handedOff: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TreeSummary {
+      val succeeded = pigeonVar_list[0] as Boolean
+      val error = pigeonVar_list[1] as String
+      val sources = pigeonVar_list[2] as List<TreeSource>
+      val claim = pigeonVar_list[3] as Claim?
+      val apiCalls = pigeonVar_list[4] as Long
+      val durationMs = pigeonVar_list[5] as Long
+      val delivered = pigeonVar_list[6] as Boolean
+      val deliveryError = pigeonVar_list[7] as String
+      val resultBytes = pigeonVar_list[8] as Long
+      val isolation = pigeonVar_list[9] as String
+      val handedOff = pigeonVar_list[10] as Boolean
+      return TreeSummary(succeeded, error, sources, claim, apiCalls, durationMs, delivered, deliveryError, resultBytes, isolation, handedOff)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      succeeded,
+      error,
+      sources,
+      claim,
+      apiCalls,
+      durationMs,
+      delivered,
+      deliveryError,
+      resultBytes,
+      isolation,
+      handedOff,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as TreeSummary
+    return MessagesPigeonUtils.deepEquals(this.succeeded, other.succeeded) && MessagesPigeonUtils.deepEquals(this.error, other.error) && MessagesPigeonUtils.deepEquals(this.sources, other.sources) && MessagesPigeonUtils.deepEquals(this.claim, other.claim) && MessagesPigeonUtils.deepEquals(this.apiCalls, other.apiCalls) && MessagesPigeonUtils.deepEquals(this.durationMs, other.durationMs) && MessagesPigeonUtils.deepEquals(this.delivered, other.delivered) && MessagesPigeonUtils.deepEquals(this.deliveryError, other.deliveryError) && MessagesPigeonUtils.deepEquals(this.resultBytes, other.resultBytes) && MessagesPigeonUtils.deepEquals(this.isolation, other.isolation) && MessagesPigeonUtils.deepEquals(this.handedOff, other.handedOff)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.succeeded)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.error)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.sources)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.claim)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.apiCalls)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.durationMs)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.delivered)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.deliveryError)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.resultBytes)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.isolation)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.handedOff)
+    return result
+  }
+  override fun toString(): String {
+    return "TreeSummary(succeeded=$succeeded, error=$error, sources=$sources, claim=$claim, apiCalls=$apiCalls, durationMs=$durationMs, delivered=$delivered, deliveryError=$deliveryError, resultBytes=$resultBytes, isolation=$isolation, handedOff=$handedOff)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class ProgressEvent (
   val sessionId: String,
   val phase: Phase,
@@ -577,31 +868,56 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
         }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          SessionConfig.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          SourceEvidence.ofRaw(it.toInt())
         }
       }
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          Disclosure.fromList(it)
+          SessionConfig.fromList(it)
         }
       }
       132.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TypedOutput.fromList(it)
+          Disclosure.fromList(it)
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          Claim.fromList(it)
+          TypedOutput.fromList(it)
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ProofReport.fromList(it)
+          Claim.fromList(it)
         }
       }
       135.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ProofReport.fromList(it)
+        }
+      }
+      136.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TreeRunConfig.fromList(it)
+        }
+      }
+      137.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TreeDisclosure.fromList(it)
+        }
+      }
+      138.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TreeSource.fromList(it)
+        }
+      }
+      139.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TreeSummary.fromList(it)
+        }
+      }
+      140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           ProgressEvent.fromList(it)
         }
@@ -615,28 +931,48 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
         stream.write(129)
         writeValue(stream, value.raw.toLong())
       }
-      is SessionConfig -> {
+      is SourceEvidence -> {
         stream.write(130)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw.toLong())
       }
-      is Disclosure -> {
+      is SessionConfig -> {
         stream.write(131)
         writeValue(stream, value.toList())
       }
-      is TypedOutput -> {
+      is Disclosure -> {
         stream.write(132)
         writeValue(stream, value.toList())
       }
-      is Claim -> {
+      is TypedOutput -> {
         stream.write(133)
         writeValue(stream, value.toList())
       }
-      is ProofReport -> {
+      is Claim -> {
         stream.write(134)
         writeValue(stream, value.toList())
       }
-      is ProgressEvent -> {
+      is ProofReport -> {
         stream.write(135)
+        writeValue(stream, value.toList())
+      }
+      is TreeRunConfig -> {
+        stream.write(136)
+        writeValue(stream, value.toList())
+      }
+      is TreeDisclosure -> {
+        stream.write(137)
+        writeValue(stream, value.toList())
+      }
+      is TreeSource -> {
+        stream.write(138)
+        writeValue(stream, value.toList())
+      }
+      is TreeSummary -> {
+        stream.write(139)
+        writeValue(stream, value.toList())
+      }
+      is ProgressEvent -> {
+        stream.write(140)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -654,6 +990,8 @@ interface ZktlsHostApi {
   suspend fun capture(sessionId: String)
   suspend fun prove(sessionId: String): ProofReport
   suspend fun claim(sessionId: String): Claim
+  suspend fun createTree(): String
+  suspend fun runTree(sessionId: String, config: TreeRunConfig, disclosure: TreeDisclosure): TreeSummary
   fun cancel(sessionId: String)
   suspend fun dispose(sessionId: String)
 
@@ -754,6 +1092,44 @@ interface ZktlsHostApi {
             CoroutineScope(Dispatchers.Main).launch {
               val wrapped: List<Any?> = try {
                 listOf(api.claim(sessionIdArg))
+              } catch (exception: Throwable) {
+                MessagesPigeonUtils.wrapError(exception)
+              }
+              reply.reply(wrapped)
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.createTree$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            CoroutineScope(Dispatchers.Main).launch {
+              val wrapped: List<Any?> = try {
+                listOf(api.createTree())
+              } catch (exception: Throwable) {
+                MessagesPigeonUtils.wrapError(exception)
+              }
+              reply.reply(wrapped)
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.runTree$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val sessionIdArg = args[0] as String
+            val configArg = args[1] as TreeRunConfig
+            val disclosureArg = args[2] as TreeDisclosure
+            CoroutineScope(Dispatchers.Main).launch {
+              val wrapped: List<Any?> = try {
+                listOf(api.runTree(sessionIdArg, configArg, disclosureArg))
               } catch (exception: Throwable) {
                 MessagesPigeonUtils.wrapError(exception)
               }
