@@ -77,7 +77,7 @@ dependencies {
     // deps (JNA, coroutines). Local-binary-first: publish the AAR to the local
     // Maven cache (:sdk:publishReleasePublicationToMavenLocal in the zktls-sdk
     // repo) until it is published to Maven Central.
-    implementation("io.github.cr3dentials:zktls-sdk:1.0.0")
+    implementation("xyz.cr3dentials:zktls-sdk:1.0.0")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.mockito:mockito-core:5.0.0")
