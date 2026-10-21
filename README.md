@@ -56,6 +56,25 @@ try {
 A failed verb throws a `PlatformException` whose `code` is an `SdkErrorCode`; `Transport` and `Policy`
 carry text. The SDK never retries, and neither should the app.
 
+## Platform packs
+
+`ZktlsClient.createTree()` makes a client for platform-pack runs, and `runTree` takes a
+`TreeRunConfig` (the run's platformId, plus the result URL and token your backend issued for it) and a
+`TreeDisclosure`. The SDK shows the disclosure, opens the platform's pages and posts the data to the
+result URL; the app gets a `TreeSummary` with counts only. `cancel` and `dispose` work as for a proof
+session; the proof verbs on a tree client fail with `Policy`.
+
+```dart
+final client = await ZktlsClient.createTree();
+try {
+  final summary = await client.runTree(config, disclosure);
+  print(summary.succeeded ? 'Collected' : 'Not collected: ${summary.error}');
+} finally {
+  await client.dispose();
+}
+```
+
 Both bridges are verified against the real SDK: the round-trips run on an Android device and an iOS
 simulator. `example/` is a runnable harness whose "Test bridge" button exercises the round-trips that
-need no live backend.
+need no live backend. Its "Run a platform pack" button runs a pack against a local pack-lab once
+`example/lib/lab_settings.dart` is filled from pack-lab's `tree.json`.

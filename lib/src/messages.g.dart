@@ -112,6 +112,11 @@ enum Phase {
   failed;
 }
 
+enum SourceEvidence {
+  observed,
+  attested;
+}
+
 class SessionConfig {
   SessionConfig({
     required this.baseUrl,
@@ -487,6 +492,351 @@ class ProofReport {
   }
 }
 
+class TreeRunConfig {
+  TreeRunConfig({
+    required this.baseUrl,
+    required this.appCredential,
+    required this.userIdHash,
+    required this.idempotencyKey,
+    required this.clientRegion,
+    required this.networkKey,
+    required this.platformId,
+    required this.trustBundleJson,
+    this.trustBundleUrl,
+    required this.trustOperatorKey,
+    required this.policyBundleJson,
+    required this.policyBundleDigest,
+    required this.relyingPartyNonceHex,
+    required this.resultUrl,
+    required this.resultToken,
+    required this.paramsJson,
+  });
+
+  String baseUrl;
+
+  String appCredential;
+
+  String userIdHash;
+
+  String idempotencyKey;
+
+  String clientRegion;
+
+  String networkKey;
+
+  String platformId;
+
+  String trustBundleJson;
+
+  String? trustBundleUrl;
+
+  String trustOperatorKey;
+
+  String policyBundleJson;
+
+  String policyBundleDigest;
+
+  String relyingPartyNonceHex;
+
+  String resultUrl;
+
+  String resultToken;
+
+  String paramsJson;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      baseUrl,
+      appCredential,
+      userIdHash,
+      idempotencyKey,
+      clientRegion,
+      networkKey,
+      platformId,
+      trustBundleJson,
+      trustBundleUrl,
+      trustOperatorKey,
+      policyBundleJson,
+      policyBundleDigest,
+      relyingPartyNonceHex,
+      resultUrl,
+      resultToken,
+      paramsJson,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static TreeRunConfig decode(Object result) {
+    result as List<Object?>;
+    return TreeRunConfig(
+      baseUrl: result[0]! as String,
+      appCredential: result[1]! as String,
+      userIdHash: result[2]! as String,
+      idempotencyKey: result[3]! as String,
+      clientRegion: result[4]! as String,
+      networkKey: result[5]! as String,
+      platformId: result[6]! as String,
+      trustBundleJson: result[7]! as String,
+      trustBundleUrl: result[8] as String?,
+      trustOperatorKey: result[9]! as String,
+      policyBundleJson: result[10]! as String,
+      policyBundleDigest: result[11]! as String,
+      relyingPartyNonceHex: result[12]! as String,
+      resultUrl: result[13]! as String,
+      resultToken: result[14]! as String,
+      paramsJson: result[15]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! TreeRunConfig || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(baseUrl, other.baseUrl) && _deepEquals(appCredential, other.appCredential) && _deepEquals(userIdHash, other.userIdHash) && _deepEquals(idempotencyKey, other.idempotencyKey) && _deepEquals(clientRegion, other.clientRegion) && _deepEquals(networkKey, other.networkKey) && _deepEquals(platformId, other.platformId) && _deepEquals(trustBundleJson, other.trustBundleJson) && _deepEquals(trustBundleUrl, other.trustBundleUrl) && _deepEquals(trustOperatorKey, other.trustOperatorKey) && _deepEquals(policyBundleJson, other.policyBundleJson) && _deepEquals(policyBundleDigest, other.policyBundleDigest) && _deepEquals(relyingPartyNonceHex, other.relyingPartyNonceHex) && _deepEquals(resultUrl, other.resultUrl) && _deepEquals(resultToken, other.resultToken) && _deepEquals(paramsJson, other.paramsJson);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'TreeRunConfig(baseUrl: $baseUrl, appCredential: $appCredential, userIdHash: $userIdHash, idempotencyKey: $idempotencyKey, clientRegion: $clientRegion, networkKey: $networkKey, platformId: $platformId, trustBundleJson: $trustBundleJson, trustBundleUrl: $trustBundleUrl, trustOperatorKey: $trustOperatorKey, policyBundleJson: $policyBundleJson, policyBundleDigest: $policyBundleDigest, relyingPartyNonceHex: $relyingPartyNonceHex, resultUrl: $resultUrl, resultToken: $resultToken, paramsJson: $paramsJson)';
+  }
+}
+
+class TreeDisclosure {
+  TreeDisclosure({
+    required this.title,
+    required this.message,
+    required this.accept,
+    required this.decline,
+  });
+
+  String title;
+
+  String message;
+
+  String accept;
+
+  String decline;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      title,
+      message,
+      accept,
+      decline,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static TreeDisclosure decode(Object result) {
+    result as List<Object?>;
+    return TreeDisclosure(
+      title: result[0]! as String,
+      message: result[1]! as String,
+      accept: result[2]! as String,
+      decline: result[3]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! TreeDisclosure || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(title, other.title) && _deepEquals(message, other.message) && _deepEquals(accept, other.accept) && _deepEquals(decline, other.decline);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'TreeDisclosure(title: $title, message: $message, accept: $accept, decline: $decline)';
+  }
+}
+
+class TreeSource {
+  TreeSource({
+    required this.storeAs,
+    required this.evidence,
+    required this.rows,
+    required this.pages,
+    required this.bytes,
+    required this.complete,
+  });
+
+  String storeAs;
+
+  SourceEvidence evidence;
+
+  int rows;
+
+  int pages;
+
+  int bytes;
+
+  bool complete;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      storeAs,
+      evidence,
+      rows,
+      pages,
+      bytes,
+      complete,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static TreeSource decode(Object result) {
+    result as List<Object?>;
+    return TreeSource(
+      storeAs: result[0]! as String,
+      evidence: result[1]! as SourceEvidence,
+      rows: result[2]! as int,
+      pages: result[3]! as int,
+      bytes: result[4]! as int,
+      complete: result[5]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! TreeSource || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(storeAs, other.storeAs) && _deepEquals(evidence, other.evidence) && _deepEquals(rows, other.rows) && _deepEquals(pages, other.pages) && _deepEquals(bytes, other.bytes) && _deepEquals(complete, other.complete);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'TreeSource(storeAs: $storeAs, evidence: $evidence, rows: $rows, pages: $pages, bytes: $bytes, complete: $complete)';
+  }
+}
+
+class TreeSummary {
+  TreeSummary({
+    required this.succeeded,
+    required this.error,
+    required this.sources,
+    this.claim,
+    required this.apiCalls,
+    required this.durationMs,
+    required this.delivered,
+    required this.deliveryError,
+    required this.resultBytes,
+    required this.isolation,
+    required this.handedOff,
+  });
+
+  bool succeeded;
+
+  String error;
+
+  List<TreeSource> sources;
+
+  Claim? claim;
+
+  int apiCalls;
+
+  int durationMs;
+
+  bool delivered;
+
+  String deliveryError;
+
+  int resultBytes;
+
+  String isolation;
+
+  bool handedOff;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      succeeded,
+      error,
+      sources,
+      claim,
+      apiCalls,
+      durationMs,
+      delivered,
+      deliveryError,
+      resultBytes,
+      isolation,
+      handedOff,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static TreeSummary decode(Object result) {
+    result as List<Object?>;
+    return TreeSummary(
+      succeeded: result[0]! as bool,
+      error: result[1]! as String,
+      sources: (result[2]! as List<Object?>).cast<TreeSource>(),
+      claim: result[3] as Claim?,
+      apiCalls: result[4]! as int,
+      durationMs: result[5]! as int,
+      delivered: result[6]! as bool,
+      deliveryError: result[7]! as String,
+      resultBytes: result[8]! as int,
+      isolation: result[9]! as String,
+      handedOff: result[10]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! TreeSummary || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(succeeded, other.succeeded) && _deepEquals(error, other.error) && _deepEquals(sources, other.sources) && _deepEquals(claim, other.claim) && _deepEquals(apiCalls, other.apiCalls) && _deepEquals(durationMs, other.durationMs) && _deepEquals(delivered, other.delivered) && _deepEquals(deliveryError, other.deliveryError) && _deepEquals(resultBytes, other.resultBytes) && _deepEquals(isolation, other.isolation) && _deepEquals(handedOff, other.handedOff);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'TreeSummary(succeeded: $succeeded, error: $error, sources: $sources, claim: $claim, apiCalls: $apiCalls, durationMs: $durationMs, delivered: $delivered, deliveryError: $deliveryError, resultBytes: $resultBytes, isolation: $isolation, handedOff: $handedOff)';
+  }
+}
+
 class ProgressEvent {
   ProgressEvent({
     required this.sessionId,
@@ -553,23 +903,38 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is Phase) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is SessionConfig) {
+    }    else if (value is SourceEvidence) {
       buffer.putUint8(130);
-      writeValue(buffer, value.encode());
-    }    else if (value is Disclosure) {
+      writeValue(buffer, value.index);
+    }    else if (value is SessionConfig) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is TypedOutput) {
+    }    else if (value is Disclosure) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is Claim) {
+    }    else if (value is TypedOutput) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is ProofReport) {
+    }    else if (value is Claim) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is ProgressEvent) {
+    }    else if (value is ProofReport) {
       buffer.putUint8(135);
+      writeValue(buffer, value.encode());
+    }    else if (value is TreeRunConfig) {
+      buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    }    else if (value is TreeDisclosure) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    }    else if (value is TreeSource) {
+      buffer.putUint8(138);
+      writeValue(buffer, value.encode());
+    }    else if (value is TreeSummary) {
+      buffer.putUint8(139);
+      writeValue(buffer, value.encode());
+    }    else if (value is ProgressEvent) {
+      buffer.putUint8(140);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -583,16 +948,27 @@ class _PigeonCodec extends StandardMessageCodec {
         final value = readValue(buffer) as int?;
         return value == null ? null : Phase.values[value];
       case 130:
-        return SessionConfig.decode(readValue(buffer)!);
+        final value = readValue(buffer) as int?;
+        return value == null ? null : SourceEvidence.values[value];
       case 131:
-        return Disclosure.decode(readValue(buffer)!);
+        return SessionConfig.decode(readValue(buffer)!);
       case 132:
-        return TypedOutput.decode(readValue(buffer)!);
+        return Disclosure.decode(readValue(buffer)!);
       case 133:
-        return Claim.decode(readValue(buffer)!);
+        return TypedOutput.decode(readValue(buffer)!);
       case 134:
-        return ProofReport.decode(readValue(buffer)!);
+        return Claim.decode(readValue(buffer)!);
       case 135:
+        return ProofReport.decode(readValue(buffer)!);
+      case 136:
+        return TreeRunConfig.decode(readValue(buffer)!);
+      case 137:
+        return TreeDisclosure.decode(readValue(buffer)!);
+      case 138:
+        return TreeSource.decode(readValue(buffer)!);
+      case 139:
+        return TreeSummary.decode(readValue(buffer)!);
+      case 140:
         return ProgressEvent.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -710,6 +1086,44 @@ class ZktlsHostApi {
     )
     ;
     return pigeonVar_replyValue! as Claim;
+  }
+
+  Future<String> createTree() async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.createTree$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as String;
+  }
+
+  Future<TreeSummary> runTree(String sessionId, TreeRunConfig config, TreeDisclosure disclosure) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.runTree$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[sessionId, config, disclosure]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as TreeSummary;
   }
 
   Future<void> cancel(String sessionId) async {

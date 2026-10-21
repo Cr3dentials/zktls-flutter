@@ -36,7 +36,14 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
   }
 
   func create(config: SessionConfig) async throws -> String {
-    let client = ZktlsClient(config: toSdkConfig(config))
+    await register(ZktlsClient(config: toSdkConfig(config)))
+  }
+
+  func createTree() async throws -> String {
+    await register(ZktlsClient())
+  }
+
+  private func register(_ client: ZktlsClient) async -> String {
     let sessionId = UUID().uuidString
     // Registered before the id is returned so no early phase is missed.
     await client.onProgress { [weak self] phase, percent in
@@ -85,6 +92,16 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
     }
   }
 
+  func runTree(sessionId: String, config: TreeRunConfig, disclosure: TreeDisclosure) async throws -> TreeSummary {
+    let client = try require(sessionId)
+    let host = try await makeTreeHost(disclosure)
+    do {
+      return toPigeonSummary(try await client.runTree(config: toSdkTreeConfig(config), host: host))
+    } catch {
+      throw mapError(error)
+    }
+  }
+
   func cancel(sessionId: String) throws {
     client(sessionId)?.cancel()
   }
@@ -102,6 +119,14 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
       return WebViewLoginPresenter(presentingFrom: vc) { _ in toSdkDisclosure(disclosure) }
     }
     return WebViewLoginPresenter(presentingFrom: vc)
+  }
+
+  @MainActor
+  private func makeTreeHost(_ disclosure: TreeDisclosure) throws -> TreeWebViewHost {
+    guard let vc = topViewController() else {
+      throw PigeonError(code: "Internal", message: "no view controller for the tree WebView", details: nil)
+    }
+    return TreeWebViewHost(presentingFrom: vc, disclosure: toSdkTreeDisclosure(disclosure))
   }
 }
 
@@ -158,6 +183,31 @@ private func toSdkDisclosure(_ d: Disclosure) -> LoginDisclosure {
   )
 }
 
+private func toSdkTreeConfig(_ c: TreeRunConfig) -> ZktlsSDK.TreeRunConfig {
+  ZktlsSDK.TreeRunConfig(
+    baseUrl: c.baseUrl,
+    appCredential: c.appCredential,
+    userIdHash: c.userIdHash,
+    idempotencyKey: c.idempotencyKey,
+    clientRegion: c.clientRegion,
+    networkKey: c.networkKey,
+    platformId: c.platformId,
+    trustBundleJson: c.trustBundleJson,
+    trustBundleUrl: c.trustBundleUrl ?? "",
+    trustOperatorKey: c.trustOperatorKey,
+    policyBundleJson: c.policyBundleJson,
+    policyBundleDigest: c.policyBundleDigest,
+    relyingPartyNonceHex: c.relyingPartyNonceHex,
+    resultUrl: c.resultUrl,
+    resultToken: c.resultToken,
+    paramsJson: c.paramsJson
+  )
+}
+
+private func toSdkTreeDisclosure(_ d: TreeDisclosure) -> ZktlsSDK.TreeDisclosure {
+  ZktlsSDK.TreeDisclosure(title: d.title, message: d.message, accept: d.accept, decline: d.decline)
+}
+
 // The SDK's u64/u32 values are unsigned; Pigeon carries them as Int64. u64 is
 // reinterpreted bit for bit (matching the Android Long conversion); the
 // magnitudes here sit well inside Int64 anyway.
@@ -184,6 +234,33 @@ private func toPigeonClaim(_ c: ZktlsSDK.Claim) -> Claim {
     expiresAt: Int64(bitPattern: c.expiresAt),
     signatureHex: c.signatureHex,
     encoded: c.encoded
+  )
+}
+
+private func toPigeonSummary(_ s: ZktlsSDK.TreeSummary) -> TreeSummary {
+  TreeSummary(
+    succeeded: s.succeeded,
+    error: s.error,
+    sources: s.sources.map(toPigeonSource),
+    claim: s.claim.map(toPigeonClaim),
+    apiCalls: Int64(s.apiCalls),
+    durationMs: Int64(bitPattern: s.durationMs),
+    delivered: s.delivered,
+    deliveryError: s.deliveryError,
+    resultBytes: Int64(bitPattern: s.resultBytes),
+    isolation: s.isolation,
+    handedOff: s.handedOff
+  )
+}
+
+private func toPigeonSource(_ s: ZktlsSDK.TreeSource) -> TreeSource {
+  TreeSource(
+    storeAs: s.storeAs,
+    evidence: s.evidence == .attested ? .attested : .observed,
+    rows: Int64(bitPattern: s.rows),
+    pages: Int64(s.pages),
+    bytes: Int64(bitPattern: s.bytes),
+    complete: s.complete
   )
 }
 

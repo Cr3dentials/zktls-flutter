@@ -3,7 +3,8 @@ import 'src/messages.g.dart';
 // The public types, re-exported from the generated schema so consumers import
 // them from the package root.
 export 'src/messages.g.dart'
-    show SessionConfig, Disclosure, Claim, TypedOutput, ProofReport, ProgressEvent, Phase;
+    show SessionConfig, Disclosure, Claim, TypedOutput, ProofReport, ProgressEvent, Phase,
+        TreeRunConfig, TreeDisclosure, TreeSummary, TreeSource, SourceEvidence;
 
 // The native SdkError/SdkException variants. A failed verb throws a
 // PlatformException whose code is one of these; Transport and Policy also carry
@@ -40,6 +41,14 @@ class ZktlsClient {
     return ZktlsClient._(id, api);
   }
 
+  // A session for platform-pack runs: runTree only. The proof verbs on it fail
+  // with the SDK's own Policy error.
+  static Future<ZktlsClient> createTree() async {
+    final api = ZktlsHostApi();
+    final id = await api.createTree();
+    return ZktlsClient._(id, api);
+  }
+
   Future<void> login([Disclosure? disclosure]) =>
       _api.login(sessionId, disclosure);
 
@@ -48,6 +57,11 @@ class ZktlsClient {
   Future<ProofReport> prove() => _api.prove(sessionId);
 
   Future<Claim> claim() => _api.claim(sessionId);
+
+  // Shows the disclosure, opens the platform's pages and runs its pack. The
+  // data goes to config.resultUrl, never to the app; the summary has counts only.
+  Future<TreeSummary> runTree(TreeRunConfig config, TreeDisclosure disclosure) =>
+      _api.runTree(sessionId, config, disclosure);
 
   Future<void> cancel() => _api.cancel(sessionId);
 
