@@ -1,6 +1,7 @@
 package ai.zktls.zktls_flutter
 
 import android.app.Activity
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -8,9 +9,12 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 import ai.zktls.sdk.SdkException
 import ai.zktls.sdk.TreeWebViewHost
 import ai.zktls.sdk.WebViewLoginPresenter
+import ai.zktls.sdk.ZkTlsLifecycle
+import ai.zktls.sdk.ZkTlsSessionService
 import ai.zktls.sdk.ZktlsClient
 import ai.zktls.sdk.Claim as SdkClaim
 import ai.zktls.sdk.LoginDisclosure as SdkLoginDisclosure
@@ -31,10 +35,20 @@ import ai.zktls.sdk.TypedOutput as SdkTypedOutput
 // channel.
 class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   private val sessions = ConcurrentHashMap<String, ZktlsClient>()
+  // One lifecycle per session, on the client's own handle, as the SDK's sample
+  // wires it: it follows network changes and, with the foreground service, keeps
+  // a session alive when the user leaves the app.
+  private val lifecycles = ConcurrentHashMap<String, ZkTlsLifecycle>()
+  // ZkTlsSessionService has a single slot: the session that started it last owns
+  // it, so an earlier session ending does not stop a later one's service.
+  private val serviceOwner = AtomicReference<String?>(null)
+  private val main = Handler(Looper.getMainLooper())
   private val progress = ProgressEmitter()
   private var activity: Activity? = null
+  private lateinit var context: Context
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    context = binding.applicationContext
     ZktlsHostApi.setUp(binding.binaryMessenger, this)
     ProgressStreamHandler.register(binding.binaryMessenger, progress)
   }
@@ -68,8 +82,12 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     val sessionId = UUID.randomUUID().toString()
     // Registered before the id is returned so no early phase is missed.
     client.onProgress { phase, percent ->
+      // A pack that attests uploads to the attester once the page closes; the
+      // user may leave the app by then.
+      if (phase == SdkPhase.ATTESTING) main.post { hold(sessionId) }
       progress.emit(ProgressEvent(sessionId, toPigeonPhase(phase), percent.toLong()))
     }
+    lifecycles[sessionId] = ZkTlsLifecycle(context, client.lifecycleHandle)
     sessions[sessionId] = client
     return sessionId
   }
@@ -83,20 +101,27 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
       WebViewLoginPresenter(act)
     }
     client.login(presenter)
+    // Only now, since the login page is the user's to take time over. Capture
+    // and proof then survive the user leaving the app or changing network.
+    main.post { hold(sessionId) }
     Unit
   }
 
   override suspend fun capture(sessionId: String) = guarded {
-    requireSession(sessionId).capture()
+    releasingOnFailure(sessionId) { requireSession(sessionId).capture() }
     Unit
   }
 
   override suspend fun prove(sessionId: String): ProofReport = guarded {
-    toPigeonReport(requireSession(sessionId).prove())
+    toPigeonReport(releasingOnFailure(sessionId) { requireSession(sessionId).prove() })
   }
 
   override suspend fun claim(sessionId: String): Claim = guarded {
-    toPigeonClaim(requireSession(sessionId).claim())
+    try {
+      toPigeonClaim(requireSession(sessionId).claim())
+    } finally {
+      release(sessionId)
+    }
   }
 
   override suspend fun runTree(
@@ -107,7 +132,11 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     val client = requireSession(sessionId)
     val act = activity ?: throw FlutterError("Internal", "no current activity for the tree WebView")
     val host = TreeWebViewHost(act, toSdkTreeDisclosure(disclosure))
-    toPigeonSummary(client.runTree(toSdkTreeConfig(config), host))
+    try {
+      toPigeonSummary(client.runTree(toSdkTreeConfig(config), host))
+    } finally {
+      release(sessionId)
+    }
   }
 
   override fun cancel(sessionId: String) {
@@ -115,7 +144,38 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   }
 
   override suspend fun dispose(sessionId: String) {
+    release(sessionId)
+    lifecycles.remove(sessionId)
     sessions.remove(sessionId)
+  }
+
+  // Starts following the network and the foreground service for a session. On the
+  // main thread. From API 31 a background start throws: the session then goes on
+  // without the service.
+  private fun hold(sessionId: String) {
+    val client = sessions[sessionId] ?: return
+    val lifecycle = lifecycles[sessionId] ?: return
+    lifecycle.begin()
+    try {
+      ZkTlsSessionService.start(context, lifecycle) { client.cancel() }
+      serviceOwner.set(sessionId)
+    } catch (e: IllegalStateException) {
+      // ForegroundServiceStartNotAllowedException: the app is in the background.
+    }
+  }
+
+  // Ends what hold started. Idempotent, so every exit may call it.
+  private fun release(sessionId: String) {
+    lifecycles[sessionId]?.end()
+    if (serviceOwner.compareAndSet(sessionId, null)) ZkTlsSessionService.stop(context)
+  }
+
+  // A failed step after login ends the session: neither the SDK nor the bridge retries.
+  private suspend fun <T> releasingOnFailure(sessionId: String, block: suspend () -> T): T = try {
+    block()
+  } catch (e: Throwable) {
+    release(sessionId)
+    throw e
   }
 
   private fun requireSession(sessionId: String): ZktlsClient =
