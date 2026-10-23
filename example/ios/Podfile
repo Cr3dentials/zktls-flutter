@@ -35,9 +35,6 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
 
-  # The native zkTLS SDK, which the zktls_flutter plugin depends on.
-  pod 'ZktlsSDK', '~> 1.0'
-
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
     inherit! :search_paths

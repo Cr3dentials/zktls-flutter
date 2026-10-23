@@ -41,8 +41,8 @@ class ZktlsClient {
     return ZktlsClient._(id, api);
   }
 
-  // A session for platform-pack runs: runTree only. The proof verbs on it fail
-  // with the SDK's own Policy error.
+  // A session for platform-pack runs: runTree only. It has no SessionConfig, so
+  // the proof verbs on it fail.
   static Future<ZktlsClient> createTree() async {
     final api = ZktlsHostApi();
     final id = await api.createTree();

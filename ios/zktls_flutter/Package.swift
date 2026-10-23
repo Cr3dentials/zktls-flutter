@@ -12,13 +12,16 @@ let package = Package(
         .library(name: "zktls-flutter", targets: ["zktls_flutter"])
     ],
     dependencies: [
-        .package(name: "FlutterFramework", path: "../FlutterFramework")
+        .package(name: "FlutterFramework", path: "../FlutterFramework"),
+        // The zkTLS SDK, from its releases repo.
+        .package(url: "https://github.com/Cr3dentials/zktls-sdk-releases", from: "1.0.0")
     ],
     targets: [
         .target(
             name: "zktls_flutter",
             dependencies: [
-                .product(name: "FlutterFramework", package: "FlutterFramework")
+                .product(name: "FlutterFramework", package: "FlutterFramework"),
+                .product(name: "ZktlsSDK", package: "zktls-sdk-releases")
             ],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it uses any required

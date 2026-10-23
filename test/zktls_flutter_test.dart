@@ -27,7 +27,7 @@ void main() {
   test('Phase enum covers the full lifecycle', () {
     expect(Phase.values, contains(Phase.loggingIn));
     expect(Phase.values, contains(Phase.done));
-    expect(Phase.values.length, 9);
+    expect(Phase.values.length, 12);
   });
 
   test('SdkErrorCode covers every native variant', () {

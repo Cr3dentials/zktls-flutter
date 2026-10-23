@@ -70,7 +70,7 @@ class SessionConfig {
 }
 
 // The consent screen shown before the login page. Any field left null keeps the
-// SDK's standard text for the profile's domains.
+// SDK's standard text for the login's cookie domains.
 class Disclosure {
   Disclosure({this.title, this.message, this.accept, this.decline});
 
@@ -270,8 +270,8 @@ abstract class ZktlsHostApi {
   @async
   Claim claim(String sessionId);
 
-  // A session for tree runs: a no-arg native ZktlsClient. The proof verbs on it
-  // fail with the SDK's own Policy error.
+  // A session for tree runs: a no-arg native ZktlsClient. It has no SessionConfig,
+  // so the proof verbs on it fail.
   @async
   String createTree();
 

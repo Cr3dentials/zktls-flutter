@@ -16,6 +16,7 @@ jobs:
           channel: stable
       - run: flutter pub get
       - run: flutter analyze
+      - run: flutter test
       - name: Analyze example
         run: cd example && flutter pub get && flutter analyze
 
@@ -45,7 +46,22 @@ jobs:
           channel: stable
       - run: cd example && flutter build apk --debug
 
+  # Swift Package Manager, Flutter's default. It names a path package after its
+  # directory, so the checkout is named as the plugin is (the repo is zktls-flutter).
   build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: zktls_flutter
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.6
+          channel: stable
+      - run: cd zktls_flutter/example && flutter build ios --simulator --debug
+
+  # CocoaPods, for apps that turn Swift Package Manager off.
+  build-ios-cocoapods:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,8 +69,5 @@ jobs:
         with:
           flutter-version: 3.47.6
           channel: stable
-      # CocoaPods, as the example's Podfile sets up: Swift Package Manager names a path
-      # package after its directory, and the checkout's (zktls-flutter) is not the
-      # plugin's (zktls_flutter).
       - run: flutter config --no-enable-swift-package-manager
       - run: cd example && flutter build ios --simulator --debug

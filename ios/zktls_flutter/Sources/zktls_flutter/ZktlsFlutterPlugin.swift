@@ -102,7 +102,8 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
     do {
       _ = try await client.capture()
     } catch {
-      release(sessionId)
+      // SessionLost keeps the login: its recovery is another capture.
+      if case .SessionLost? = error as? SdkError {} else { release(sessionId) }
       throw mapError(error)
     }
   }
@@ -110,7 +111,10 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
   func prove(sessionId: String) async throws -> ProofReport {
     let client = try require(sessionId)
     do {
-      return toPigeonReport(try await client.prove())
+      let report = try await client.prove()
+      // A rejected proof ends the session: there is no claim to fetch.
+      if !report.accepted { release(sessionId) }
+      return toPigeonReport(report)
     } catch {
       release(sessionId)
       throw mapError(error)
@@ -156,7 +160,7 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
       throw PigeonError(code: "Internal", message: "no view controller for the login WebView", details: nil)
     }
     if let disclosure = disclosure {
-      return WebViewLoginPresenter(presentingFrom: vc) { _ in toSdkDisclosure(disclosure) }
+      return WebViewLoginPresenter(presentingFrom: vc) { domains in toSdkDisclosure(disclosure, domains) }
     }
     return WebViewLoginPresenter(presentingFrom: vc)
   }
@@ -214,13 +218,14 @@ private func toSdkConfig(_ c: SessionConfig) -> ZktlsSDK.SessionConfig {
   )
 }
 
-private func toSdkDisclosure(_ d: Disclosure) -> LoginDisclosure {
-  LoginDisclosure(
-    title: d.title ?? "",
-    message: d.message ?? "",
-    accept: d.accept ?? "",
-    decline: d.decline ?? ""
-  )
+// A field left nil keeps the SDK's standard text for the login's cookie domains.
+private func toSdkDisclosure(_ d: Disclosure, _ domains: [String]) -> LoginDisclosure {
+  var disclosure = LoginDisclosure.standard(domains: domains)
+  if let v = d.title { disclosure.title = v }
+  if let v = d.message { disclosure.message = v }
+  if let v = d.accept { disclosure.accept = v }
+  if let v = d.decline { disclosure.decline = v }
+  return disclosure
 }
 
 private func toSdkTreeConfig(_ c: TreeRunConfig) -> ZktlsSDK.TreeRunConfig {
