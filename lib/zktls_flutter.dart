@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import 'src/messages.g.dart';
 
 // The public types, re-exported from the generated schema so consumers import
@@ -23,6 +25,17 @@ enum SdkErrorCode {
   transport,
   policy,
   internal,
+}
+
+// The SdkErrorCode a verb's PlatformException carries, or null for any other
+// error. The exception's code is the native variant's name ("NotLoggedIn").
+SdkErrorCode? sdkErrorCodeOf(Object error) {
+  if (error is! PlatformException) return null;
+  final code = error.code.toLowerCase();
+  for (final value in SdkErrorCode.values) {
+    if (value.name.toLowerCase() == code) return value;
+  }
+  return null;
 }
 
 // One instance per session, mirroring the native ZktlsClient. The native side

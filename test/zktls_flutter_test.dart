@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zktls_flutter/zktls_flutter.dart';
 
@@ -28,6 +29,13 @@ void main() {
     expect(Phase.values, contains(Phase.loggingIn));
     expect(Phase.values, contains(Phase.done));
     expect(Phase.values.length, 12);
+  });
+
+  test('sdkErrorCodeOf reads the native variant name', () {
+    expect(sdkErrorCodeOf(PlatformException(code: 'NotLoggedIn')), SdkErrorCode.notLoggedIn);
+    expect(sdkErrorCodeOf(PlatformException(code: 'Policy', message: 'x')), SdkErrorCode.policy);
+    expect(sdkErrorCodeOf(PlatformException(code: 'Unknown')), isNull);
+    expect(sdkErrorCodeOf(StateError('x')), isNull);
   });
 
   test('SdkErrorCode covers every native variant', () {
