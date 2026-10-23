@@ -31,13 +31,8 @@ jobs:
       - name: Validate the publishable package
         run: dart pub publish --dry-run
 
-  # The example app links ZktlsSDK, which is consumed from a local build until the
-  # SDK is published (see the README's "native SDK" note). CI cannot resolve it yet,
-  # so these two run for signal but do not fail the overall check.
-  # TODO: remove continue-on-error once the bridges flip to the published SDK coordinate.
   build-android:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -52,11 +47,14 @@ jobs:
 
   build-ios:
     runs-on: macos-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.47.6
           channel: stable
+      # CocoaPods, as the example's Podfile sets up: Swift Package Manager names a path
+      # package after its directory, and the checkout's (zktls-flutter) is not the
+      # plugin's (zktls_flutter).
+      - run: flutter config --no-enable-swift-package-manager
       - run: cd example && flutter build ios --simulator --debug
