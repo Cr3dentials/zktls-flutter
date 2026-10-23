@@ -1,5 +1,5 @@
 name: zktls_flutter
-description: "Flutter bridge for the zkTLS native SDK: drives its six verbs (login, capture, prove, claim, progress, cancel) from Dart over the compiled native binary."
+description: "Flutter bridge for the zkTLS native SDK: proves facts (login, capture, prove, claim) and runs platform packs (runTree) from Dart over the compiled native binary."
 version: 0.0.1
 repository: https://github.com/Cr3dentials/zktls-flutter
 

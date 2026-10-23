@@ -1,7 +1,7 @@
 # zktls-flutter
 
 Flutter bridge for the [zkTLS native SDK](https://github.com/Cr3dentials/zktls-sdk). It exposes the
-SDK's six verbs to a Flutter app: the native SDK does the cryptography, this plugin is the thin bridge
+SDK's API to a Flutter app: the native SDK does the cryptography, this plugin is the thin bridge
 that lets Dart drive it. One API on both platforms, generated with
 [Pigeon](https://pub.dev/packages/pigeon) from `pigeons/messages.dart`.
 
@@ -28,7 +28,7 @@ source 'https://github.com/Cr3dentials/zktls-sdk-releases.git'
 source 'https://cdn.cocoapods.org/'
 ```
 
-## The six verbs
+## Proving a fact
 
 `ZktlsClient` mirrors the SDK's facade: `create`, `login`, `capture`, `prove`, `claim`, `onProgress`,
 `cancel`, `dispose`. `create` takes a `SessionConfig` (baseUrl, appCredential, the trust and policy
@@ -54,13 +54,17 @@ try {
 A failed verb throws a `PlatformException` whose `code` is an `SdkErrorCode`; `Transport` and `Policy`
 carry text. The SDK never retries, and neither should the app.
 
+On Android a session shows the SDK's foreground-service notification while it is protected: from
+`login` to the end of the proof, and while a pack's run is with the attester. Its text and icon are the
+SDK's resources, which an app can override.
+
 ## Platform packs
 
 `ZktlsClient.createTree()` makes a client for platform-pack runs, and `runTree` takes a
 `TreeRunConfig` (the run's platformId, plus the result URL and token your backend issued for it) and a
 `TreeDisclosure`. The SDK shows the disclosure, opens the platform's pages and posts the data to the
 result URL; the app gets a `TreeSummary` with counts only. `cancel` and `dispose` work as for a proof
-session; the proof verbs on a tree client fail with `Policy`.
+session. A tree client has no `SessionConfig`, so the proof verbs on it fail.
 
 ```dart
 final client = await ZktlsClient.createTree();

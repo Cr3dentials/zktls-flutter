@@ -39,8 +39,8 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   // wires it: it follows network changes and, with the foreground service, keeps
   // a session alive when the user leaves the app.
   private val lifecycles = ConcurrentHashMap<String, ZkTlsLifecycle>()
-  // ZkTlsSessionService has a single slot: the session that started it last owns
-  // it, so an earlier session ending does not stop a later one's service.
+  // ZkTlsSessionService has a single slot: the session that started it owns it,
+  // and a later session goes on without the service rather than take it over.
   private val serviceOwner = AtomicReference<String?>(null)
   private val main = Handler(Looper.getMainLooper())
   private val progress = ProgressEmitter()
@@ -96,7 +96,7 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     val client = requireSession(sessionId)
     val act = activity ?: throw FlutterError("Internal", "no current activity for the login WebView")
     val presenter = if (disclosure != null) {
-      WebViewLoginPresenter(act) { toSdkDisclosure(disclosure) }
+      WebViewLoginPresenter(act) { domains -> toSdkDisclosure(disclosure, domains) }
     } else {
       WebViewLoginPresenter(act)
     }
@@ -113,7 +113,10 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   }
 
   override suspend fun prove(sessionId: String): ProofReport = guarded {
-    toPigeonReport(releasingOnFailure(sessionId) { requireSession(sessionId).prove() })
+    val report = releasingOnFailure(sessionId) { requireSession(sessionId).prove() }
+    // A rejected proof ends the session: there is no claim to fetch.
+    if (!report.accepted) release(sessionId)
+    toPigeonReport(report)
   }
 
   override suspend fun claim(sessionId: String): Claim = guarded {
@@ -156,11 +159,14 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     val client = sessions[sessionId] ?: return
     val lifecycle = lifecycles[sessionId] ?: return
     lifecycle.begin()
+    if (!serviceOwner.compareAndSet(null, sessionId)) return
     try {
       ZkTlsSessionService.start(context, lifecycle) { client.cancel() }
-      serviceOwner.set(sessionId)
     } catch (e: IllegalStateException) {
       // ForegroundServiceStartNotAllowedException: the app is in the background.
+      // start set the slot before it threw, so clear it.
+      serviceOwner.set(null)
+      ZkTlsSessionService.stop(context)
     }
   }
 
@@ -170,11 +176,12 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     if (serviceOwner.compareAndSet(sessionId, null)) ZkTlsSessionService.stop(context)
   }
 
-  // A failed step after login ends the session: neither the SDK nor the bridge retries.
+  // A failed step after login ends the session: neither the SDK nor the bridge
+  // retries. SessionLost keeps the login: its recovery is another capture.
   private suspend fun <T> releasingOnFailure(sessionId: String, block: suspend () -> T): T = try {
     block()
   } catch (e: Throwable) {
-    release(sessionId)
+    if (e !is SdkException.SessionLost) release(sessionId)
     throw e
   }
 
@@ -221,12 +228,16 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     policyBundleDigest = c.policyBundleDigest,
   )
 
-  private fun toSdkDisclosure(d: Disclosure) = SdkLoginDisclosure(
-    title = d.title ?: "",
-    message = d.message ?: "",
-    accept = d.accept ?: "",
-    decline = d.decline ?: "",
-  )
+  // A field left null keeps the SDK's standard text for the login's cookie domains.
+  private fun toSdkDisclosure(d: Disclosure, domains: List<String>): SdkLoginDisclosure {
+    val standard = SdkLoginDisclosure.standard(domains)
+    return SdkLoginDisclosure(
+      title = d.title ?: standard.title,
+      message = d.message ?: standard.message,
+      accept = d.accept ?: standard.accept,
+      decline = d.decline ?: standard.decline,
+    )
+  }
 
   private fun toSdkTreeConfig(c: TreeRunConfig) = SdkTreeRunConfig(
     baseUrl = c.baseUrl,
