@@ -20,12 +20,8 @@ Dart 3.13 or later. Android 7.0 (API 24) or later. iOS 15.0 or later.
 
 ## Install
 
-Not on pub.dev yet:
-
-```yaml
-dependencies:
-  zktls_flutter:
-    git: https://github.com/Cr3dentials/zktls-flutter.git
+```sh
+flutter pub add zktls_flutter
 ```
 
 Android needs nothing more: Gradle fetches the SDK from Maven Central. On iOS, with Swift Package
