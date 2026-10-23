@@ -1,3 +1,8 @@
+# The zkTLS SDK's pod comes from its releases repo, which is its own spec source.
+# CocoaPods takes a pod from the first source that has it, so it goes first.
+source 'https://github.com/Cr3dentials/zktls-sdk-releases.git'
+source 'https://cdn.cocoapods.org/'
+
 # Uncomment this line to define a global platform for your project
 platform :ios, '15.0'
 
@@ -30,11 +35,8 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
 
-  # Local-binary-first: the native zkTLS SDK from a local build-ios.sh run
-  # (swift/ holds the Swift API + ZktlsSDKFFI.xcframework). Satisfies the
-  # zktls_flutter plugin's ZktlsSDK dependency. Swap for the published pod once
-  # zktls-sdk releases one.
-  pod 'ZktlsSDK', :path => '../../../zktls-sdk/swift'
+  # The native zkTLS SDK, which the zktls_flutter plugin depends on.
+  pod 'ZktlsSDK', '~> 1.0'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do

@@ -18,7 +18,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
     }
 }
 
@@ -73,10 +72,8 @@ kotlin {
 }
 
 dependencies {
-    // The native zkTLS SDK. Resolved from Maven; its POM brings the transitive
-    // deps (JNA, coroutines). Local-binary-first: publish the AAR to the local
-    // Maven cache (:sdk:publishReleasePublicationToMavenLocal in the zktls-sdk
-    // repo) until it is published to Maven Central.
+    // The native zkTLS SDK, from Maven Central; its POM brings the transitive
+    // deps (JNA, coroutines).
     implementation("xyz.cr3dentials:zktls-sdk:1.0.0")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
