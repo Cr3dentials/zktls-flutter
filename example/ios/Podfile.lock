@@ -4,14 +4,17 @@ PODS:
     - Flutter
   - zktls_flutter (0.0.1):
     - Flutter
-    - ZktlsSDK
-  - ZktlsSDK (0.1.0)
+    - ZktlsSDK (~> 1.0)
+  - ZktlsSDK (1.0.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - zktls_flutter (from `.symlinks/plugins/zktls_flutter/ios`)
-  - ZktlsSDK (from `../../../zktls-sdk/swift`)
+
+SPEC REPOS:
+  https://github.com/Cr3dentials/zktls-sdk-releases.git:
+    - ZktlsSDK
 
 EXTERNAL SOURCES:
   Flutter:
@@ -20,15 +23,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
   zktls_flutter:
     :path: ".symlinks/plugins/zktls_flutter/ios"
-  ZktlsSDK:
-    :path: "../../../zktls-sdk/swift"
 
 SPEC CHECKSUMS:
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  zktls_flutter: 0e6d63bce5e994a556ab4b6f712e62ab5a509f02
-  ZktlsSDK: 28cbf6683104ffaeb345010e35fe5ab7726de270
+  zktls_flutter: 0b8674d0114beec45ff7c5a6d988481d86c479c4
+  ZktlsSDK: 4bc8612ff0d8a19245ff9351b1ab58436087fa79
 
-PODFILE CHECKSUM: 95a82bc20506de4183dfe6f369a3e346dd524748
+PODFILE CHECKSUM: 5a5b001f36e3db8af85e4dd820407823b8440e9a
 
 COCOAPODS: 1.17.0
