@@ -199,9 +199,10 @@ enum Phase: Int, CaseIterable {
   case failed = 11
 }
 
-enum SourceEvidence: Int, CaseIterable {
-  case observed = 0
-  case attested = 1
+enum PlatformStatus: Int, CaseIterable {
+  case done = 0
+  case failed = 1
+  case notStarted = 2
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
@@ -530,307 +531,137 @@ struct ProofReport: Hashable, CustomStringConvertible {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct TreeRunConfig: Hashable, CustomStringConvertible {
-  var baseUrl: String
-  var appCredential: String
-  var userIdHash: String
-  var idempotencyKey: String
-  var clientRegion: String
-  var networkKey: String
-  var platformId: String
-  var trustBundleJson: String
-  var trustBundleUrl: String? = nil
-  var trustOperatorKey: String
-  var policyBundleJson: String
-  var policyBundleDigest: String
-  var relyingPartyNonceHex: String
-  var resultUrl: String
-  var resultToken: String
-  var paramsJson: String
+struct Theme: Hashable, CustomStringConvertible {
+  var accent: String? = nil
+  var background: String? = nil
+  var text: String? = nil
+  var logo: String? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> TreeRunConfig? {
-    let baseUrl = pigeonVar_list[0] as! String
-    let appCredential = pigeonVar_list[1] as! String
-    let userIdHash = pigeonVar_list[2] as! String
-    let idempotencyKey = pigeonVar_list[3] as! String
-    let clientRegion = pigeonVar_list[4] as! String
-    let networkKey = pigeonVar_list[5] as! String
-    let platformId = pigeonVar_list[6] as! String
-    let trustBundleJson = pigeonVar_list[7] as! String
-    let trustBundleUrl: String? = nilOrValue(pigeonVar_list[8])
-    let trustOperatorKey = pigeonVar_list[9] as! String
-    let policyBundleJson = pigeonVar_list[10] as! String
-    let policyBundleDigest = pigeonVar_list[11] as! String
-    let relyingPartyNonceHex = pigeonVar_list[12] as! String
-    let resultUrl = pigeonVar_list[13] as! String
-    let resultToken = pigeonVar_list[14] as! String
-    let paramsJson = pigeonVar_list[15] as! String
+  static func fromList(_ pigeonVar_list: [Any?]) -> Theme? {
+    let accent: String? = nilOrValue(pigeonVar_list[0])
+    let background: String? = nilOrValue(pigeonVar_list[1])
+    let text: String? = nilOrValue(pigeonVar_list[2])
+    let logo: String? = nilOrValue(pigeonVar_list[3])
 
-    return TreeRunConfig(
-      baseUrl: baseUrl,
-      appCredential: appCredential,
-      userIdHash: userIdHash,
-      idempotencyKey: idempotencyKey,
-      clientRegion: clientRegion,
-      networkKey: networkKey,
-      platformId: platformId,
-      trustBundleJson: trustBundleJson,
-      trustBundleUrl: trustBundleUrl,
-      trustOperatorKey: trustOperatorKey,
-      policyBundleJson: policyBundleJson,
-      policyBundleDigest: policyBundleDigest,
-      relyingPartyNonceHex: relyingPartyNonceHex,
-      resultUrl: resultUrl,
-      resultToken: resultToken,
-      paramsJson: paramsJson
+    return Theme(
+      accent: accent,
+      background: background,
+      text: text,
+      logo: logo
     )
   }
   func toList() -> [Any?] {
     return [
-      baseUrl,
-      appCredential,
-      userIdHash,
-      idempotencyKey,
-      clientRegion,
-      networkKey,
-      platformId,
-      trustBundleJson,
-      trustBundleUrl,
-      trustOperatorKey,
-      policyBundleJson,
-      policyBundleDigest,
-      relyingPartyNonceHex,
-      resultUrl,
-      resultToken,
-      paramsJson,
+      accent,
+      background,
+      text,
+      logo,
     ]
   }
-  static func == (lhs: TreeRunConfig, rhs: TreeRunConfig) -> Bool {
+  static func == (lhs: Theme, rhs: Theme) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return MessagesPigeonInternal.deepEquals(lhs.baseUrl, rhs.baseUrl) && MessagesPigeonInternal.deepEquals(lhs.appCredential, rhs.appCredential) && MessagesPigeonInternal.deepEquals(lhs.userIdHash, rhs.userIdHash) && MessagesPigeonInternal.deepEquals(lhs.idempotencyKey, rhs.idempotencyKey) && MessagesPigeonInternal.deepEquals(lhs.clientRegion, rhs.clientRegion) && MessagesPigeonInternal.deepEquals(lhs.networkKey, rhs.networkKey) && MessagesPigeonInternal.deepEquals(lhs.platformId, rhs.platformId) && MessagesPigeonInternal.deepEquals(lhs.trustBundleJson, rhs.trustBundleJson) && MessagesPigeonInternal.deepEquals(lhs.trustBundleUrl, rhs.trustBundleUrl) && MessagesPigeonInternal.deepEquals(lhs.trustOperatorKey, rhs.trustOperatorKey) && MessagesPigeonInternal.deepEquals(lhs.policyBundleJson, rhs.policyBundleJson) && MessagesPigeonInternal.deepEquals(lhs.policyBundleDigest, rhs.policyBundleDigest) && MessagesPigeonInternal.deepEquals(lhs.relyingPartyNonceHex, rhs.relyingPartyNonceHex) && MessagesPigeonInternal.deepEquals(lhs.resultUrl, rhs.resultUrl) && MessagesPigeonInternal.deepEquals(lhs.resultToken, rhs.resultToken) && MessagesPigeonInternal.deepEquals(lhs.paramsJson, rhs.paramsJson)
+    return MessagesPigeonInternal.deepEquals(lhs.accent, rhs.accent) && MessagesPigeonInternal.deepEquals(lhs.background, rhs.background) && MessagesPigeonInternal.deepEquals(lhs.text, rhs.text) && MessagesPigeonInternal.deepEquals(lhs.logo, rhs.logo)
   }
 
   func hash(into hasher: inout Hasher) {
-    hasher.combine("TreeRunConfig")
-    MessagesPigeonInternal.deepHash(value: baseUrl, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: appCredential, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: userIdHash, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: idempotencyKey, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: clientRegion, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: networkKey, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: platformId, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: trustBundleJson, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: trustBundleUrl, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: trustOperatorKey, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: policyBundleJson, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: policyBundleDigest, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: relyingPartyNonceHex, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: resultUrl, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: resultToken, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: paramsJson, hasher: &hasher)
+    hasher.combine("Theme")
+    MessagesPigeonInternal.deepHash(value: accent, hasher: &hasher)
+    MessagesPigeonInternal.deepHash(value: background, hasher: &hasher)
+    MessagesPigeonInternal.deepHash(value: text, hasher: &hasher)
+    MessagesPigeonInternal.deepHash(value: logo, hasher: &hasher)
   }
 
   public var description: String {
-    return "TreeRunConfig(baseUrl: \(String(describing: baseUrl)), appCredential: \(String(describing: appCredential)), userIdHash: \(String(describing: userIdHash)), idempotencyKey: \(String(describing: idempotencyKey)), clientRegion: \(String(describing: clientRegion)), networkKey: \(String(describing: networkKey)), platformId: \(String(describing: platformId)), trustBundleJson: \(String(describing: trustBundleJson)), trustBundleUrl: \(String(describing: trustBundleUrl)), trustOperatorKey: \(String(describing: trustOperatorKey)), policyBundleJson: \(String(describing: policyBundleJson)), policyBundleDigest: \(String(describing: policyBundleDigest)), relyingPartyNonceHex: \(String(describing: relyingPartyNonceHex)), resultUrl: \(String(describing: resultUrl)), resultToken: \(String(describing: resultToken)), paramsJson: \(String(describing: paramsJson)))"
+    return "Theme(accent: \(String(describing: accent)), background: \(String(describing: background)), text: \(String(describing: text)), logo: \(String(describing: logo)))"
   }
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct TreeDisclosure: Hashable, CustomStringConvertible {
-  var title: String
-  var message: String
-  var accept: String
-  var decline: String
+struct PlatformOutcome: Hashable, CustomStringConvertible {
+  var platform: String
+  var status: PlatformStatus
+  var reason: String? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> TreeDisclosure? {
-    let title = pigeonVar_list[0] as! String
-    let message = pigeonVar_list[1] as! String
-    let accept = pigeonVar_list[2] as! String
-    let decline = pigeonVar_list[3] as! String
+  static func fromList(_ pigeonVar_list: [Any?]) -> PlatformOutcome? {
+    let platform = pigeonVar_list[0] as! String
+    let status = pigeonVar_list[1] as! PlatformStatus
+    let reason: String? = nilOrValue(pigeonVar_list[2])
 
-    return TreeDisclosure(
-      title: title,
-      message: message,
-      accept: accept,
-      decline: decline
+    return PlatformOutcome(
+      platform: platform,
+      status: status,
+      reason: reason
     )
   }
   func toList() -> [Any?] {
     return [
-      title,
-      message,
-      accept,
-      decline,
+      platform,
+      status,
+      reason,
     ]
   }
-  static func == (lhs: TreeDisclosure, rhs: TreeDisclosure) -> Bool {
+  static func == (lhs: PlatformOutcome, rhs: PlatformOutcome) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return MessagesPigeonInternal.deepEquals(lhs.title, rhs.title) && MessagesPigeonInternal.deepEquals(lhs.message, rhs.message) && MessagesPigeonInternal.deepEquals(lhs.accept, rhs.accept) && MessagesPigeonInternal.deepEquals(lhs.decline, rhs.decline)
+    return MessagesPigeonInternal.deepEquals(lhs.platform, rhs.platform) && MessagesPigeonInternal.deepEquals(lhs.status, rhs.status) && MessagesPigeonInternal.deepEquals(lhs.reason, rhs.reason)
   }
 
   func hash(into hasher: inout Hasher) {
-    hasher.combine("TreeDisclosure")
-    MessagesPigeonInternal.deepHash(value: title, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: message, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: accept, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: decline, hasher: &hasher)
+    hasher.combine("PlatformOutcome")
+    MessagesPigeonInternal.deepHash(value: platform, hasher: &hasher)
+    MessagesPigeonInternal.deepHash(value: status, hasher: &hasher)
+    MessagesPigeonInternal.deepHash(value: reason, hasher: &hasher)
   }
 
   public var description: String {
-    return "TreeDisclosure(title: \(String(describing: title)), message: \(String(describing: message)), accept: \(String(describing: accept)), decline: \(String(describing: decline)))"
+    return "PlatformOutcome(platform: \(String(describing: platform)), status: \(String(describing: status)), reason: \(String(describing: reason)))"
   }
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct TreeSource: Hashable, CustomStringConvertible {
-  var storeAs: String
-  var evidence: SourceEvidence
-  var rows: Int64
-  var pages: Int64
-  var bytes: Int64
-  var complete: Bool
+struct VerifyOutcome: Hashable, CustomStringConvertible {
+  var verificationId: String
+  var platforms: [PlatformOutcome]
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> TreeSource? {
-    let storeAs = pigeonVar_list[0] as! String
-    let evidence = pigeonVar_list[1] as! SourceEvidence
-    let rows = pigeonVar_list[2] as! Int64
-    let pages = pigeonVar_list[3] as! Int64
-    let bytes = pigeonVar_list[4] as! Int64
-    let complete = pigeonVar_list[5] as! Bool
+  static func fromList(_ pigeonVar_list: [Any?]) -> VerifyOutcome? {
+    let verificationId = pigeonVar_list[0] as! String
+    let platforms = pigeonVar_list[1] as! [PlatformOutcome]
 
-    return TreeSource(
-      storeAs: storeAs,
-      evidence: evidence,
-      rows: rows,
-      pages: pages,
-      bytes: bytes,
-      complete: complete
+    return VerifyOutcome(
+      verificationId: verificationId,
+      platforms: platforms
     )
   }
   func toList() -> [Any?] {
     return [
-      storeAs,
-      evidence,
-      rows,
-      pages,
-      bytes,
-      complete,
+      verificationId,
+      platforms,
     ]
   }
-  static func == (lhs: TreeSource, rhs: TreeSource) -> Bool {
+  static func == (lhs: VerifyOutcome, rhs: VerifyOutcome) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return MessagesPigeonInternal.deepEquals(lhs.storeAs, rhs.storeAs) && MessagesPigeonInternal.deepEquals(lhs.evidence, rhs.evidence) && MessagesPigeonInternal.deepEquals(lhs.rows, rhs.rows) && MessagesPigeonInternal.deepEquals(lhs.pages, rhs.pages) && MessagesPigeonInternal.deepEquals(lhs.bytes, rhs.bytes) && MessagesPigeonInternal.deepEquals(lhs.complete, rhs.complete)
+    return MessagesPigeonInternal.deepEquals(lhs.verificationId, rhs.verificationId) && MessagesPigeonInternal.deepEquals(lhs.platforms, rhs.platforms)
   }
 
   func hash(into hasher: inout Hasher) {
-    hasher.combine("TreeSource")
-    MessagesPigeonInternal.deepHash(value: storeAs, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: evidence, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: rows, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: pages, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: bytes, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: complete, hasher: &hasher)
+    hasher.combine("VerifyOutcome")
+    MessagesPigeonInternal.deepHash(value: verificationId, hasher: &hasher)
+    MessagesPigeonInternal.deepHash(value: platforms, hasher: &hasher)
   }
 
   public var description: String {
-    return "TreeSource(storeAs: \(String(describing: storeAs)), evidence: \(String(describing: evidence)), rows: \(String(describing: rows)), pages: \(String(describing: pages)), bytes: \(String(describing: bytes)), complete: \(String(describing: complete)))"
-  }
-}
-
-/// Generated class from Pigeon that represents data sent in messages.
-struct TreeSummary: Hashable, CustomStringConvertible {
-  var succeeded: Bool
-  var error: String
-  var sources: [TreeSource]
-  var claim: Claim? = nil
-  var apiCalls: Int64
-  var durationMs: Int64
-  var delivered: Bool
-  var deliveryError: String
-  var resultBytes: Int64
-  var isolation: String
-  var handedOff: Bool
-
-
-  // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> TreeSummary? {
-    let succeeded = pigeonVar_list[0] as! Bool
-    let error = pigeonVar_list[1] as! String
-    let sources = pigeonVar_list[2] as! [TreeSource]
-    let claim: Claim? = nilOrValue(pigeonVar_list[3])
-    let apiCalls = pigeonVar_list[4] as! Int64
-    let durationMs = pigeonVar_list[5] as! Int64
-    let delivered = pigeonVar_list[6] as! Bool
-    let deliveryError = pigeonVar_list[7] as! String
-    let resultBytes = pigeonVar_list[8] as! Int64
-    let isolation = pigeonVar_list[9] as! String
-    let handedOff = pigeonVar_list[10] as! Bool
-
-    return TreeSummary(
-      succeeded: succeeded,
-      error: error,
-      sources: sources,
-      claim: claim,
-      apiCalls: apiCalls,
-      durationMs: durationMs,
-      delivered: delivered,
-      deliveryError: deliveryError,
-      resultBytes: resultBytes,
-      isolation: isolation,
-      handedOff: handedOff
-    )
-  }
-  func toList() -> [Any?] {
-    return [
-      succeeded,
-      error,
-      sources,
-      claim,
-      apiCalls,
-      durationMs,
-      delivered,
-      deliveryError,
-      resultBytes,
-      isolation,
-      handedOff,
-    ]
-  }
-  static func == (lhs: TreeSummary, rhs: TreeSummary) -> Bool {
-    if Swift.type(of: lhs) != Swift.type(of: rhs) {
-      return false
-    }
-    return MessagesPigeonInternal.deepEquals(lhs.succeeded, rhs.succeeded) && MessagesPigeonInternal.deepEquals(lhs.error, rhs.error) && MessagesPigeonInternal.deepEquals(lhs.sources, rhs.sources) && MessagesPigeonInternal.deepEquals(lhs.claim, rhs.claim) && MessagesPigeonInternal.deepEquals(lhs.apiCalls, rhs.apiCalls) && MessagesPigeonInternal.deepEquals(lhs.durationMs, rhs.durationMs) && MessagesPigeonInternal.deepEquals(lhs.delivered, rhs.delivered) && MessagesPigeonInternal.deepEquals(lhs.deliveryError, rhs.deliveryError) && MessagesPigeonInternal.deepEquals(lhs.resultBytes, rhs.resultBytes) && MessagesPigeonInternal.deepEquals(lhs.isolation, rhs.isolation) && MessagesPigeonInternal.deepEquals(lhs.handedOff, rhs.handedOff)
-  }
-
-  func hash(into hasher: inout Hasher) {
-    hasher.combine("TreeSummary")
-    MessagesPigeonInternal.deepHash(value: succeeded, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: error, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: sources, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: claim, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: apiCalls, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: durationMs, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: delivered, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: deliveryError, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: resultBytes, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: isolation, hasher: &hasher)
-    MessagesPigeonInternal.deepHash(value: handedOff, hasher: &hasher)
-  }
-
-  public var description: String {
-    return "TreeSummary(succeeded: \(String(describing: succeeded)), error: \(String(describing: error)), sources: \(String(describing: sources)), claim: \(String(describing: claim)), apiCalls: \(String(describing: apiCalls)), durationMs: \(String(describing: durationMs)), delivered: \(String(describing: delivered)), deliveryError: \(String(describing: deliveryError)), resultBytes: \(String(describing: resultBytes)), isolation: \(String(describing: isolation)), handedOff: \(String(describing: handedOff)))"
+    return "VerifyOutcome(verificationId: \(String(describing: verificationId)), platforms: \(String(describing: platforms)))"
   }
 }
 
@@ -891,7 +722,7 @@ private class MessagesPigeonCodecReader: FlutterStandardReader {
     case 130:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return SourceEvidence(rawValue: enumResultAsInt)
+        return PlatformStatus(rawValue: enumResultAsInt)
       }
       return nil
     case 131:
@@ -905,14 +736,12 @@ private class MessagesPigeonCodecReader: FlutterStandardReader {
     case 135:
       return ProofReport.fromList(self.readValue() as! [Any?])
     case 136:
-      return TreeRunConfig.fromList(self.readValue() as! [Any?])
+      return Theme.fromList(self.readValue() as! [Any?])
     case 137:
-      return TreeDisclosure.fromList(self.readValue() as! [Any?])
+      return PlatformOutcome.fromList(self.readValue() as! [Any?])
     case 138:
-      return TreeSource.fromList(self.readValue() as! [Any?])
+      return VerifyOutcome.fromList(self.readValue() as! [Any?])
     case 139:
-      return TreeSummary.fromList(self.readValue() as! [Any?])
-    case 140:
       return ProgressEvent.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -925,7 +754,7 @@ private class MessagesPigeonCodecWriter: FlutterStandardWriter {
     if let value = value as? Phase {
       super.writeByte(129)
       super.writeValue(value.rawValue)
-    } else if let value = value as? SourceEvidence {
+    } else if let value = value as? PlatformStatus {
       super.writeByte(130)
       super.writeValue(value.rawValue)
     } else if let value = value as? SessionConfig {
@@ -943,20 +772,17 @@ private class MessagesPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? ProofReport {
       super.writeByte(135)
       super.writeValue(value.toList())
-    } else if let value = value as? TreeRunConfig {
+    } else if let value = value as? Theme {
       super.writeByte(136)
       super.writeValue(value.toList())
-    } else if let value = value as? TreeDisclosure {
+    } else if let value = value as? PlatformOutcome {
       super.writeByte(137)
       super.writeValue(value.toList())
-    } else if let value = value as? TreeSource {
+    } else if let value = value as? VerifyOutcome {
       super.writeByte(138)
       super.writeValue(value.toList())
-    } else if let value = value as? TreeSummary {
-      super.writeByte(139)
-      super.writeValue(value.toList())
     } else if let value = value as? ProgressEvent {
-      super.writeByte(140)
+      super.writeByte(139)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -983,13 +809,14 @@ var messagesPigeonMethodCodec = FlutterStandardMethodCodec(readerWriter: Message
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol ZktlsHostApi {
+  func configure(appKey: String, theme: Theme?, strings: [String: String]?) async throws
+  func verify(platforms: [String], reference: String) async throws -> VerifyOutcome
+  func verifyToken(token: String) async throws -> VerifyOutcome
   func create(config: SessionConfig) async throws -> String
   func login(sessionId: String, disclosure: Disclosure?) async throws
   func capture(sessionId: String) async throws
   func prove(sessionId: String) async throws -> ProofReport
   func claim(sessionId: String) async throws -> Claim
-  func createTree() async throws -> String
-  func runTree(sessionId: String, config: TreeRunConfig, disclosure: TreeDisclosure) async throws -> TreeSummary
   func cancel(sessionId: String) throws
   func dispose(sessionId: String) async throws
 }
@@ -1000,6 +827,60 @@ class ZktlsHostApiSetup {
   /// Sets up an instance of `ZktlsHostApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: ZktlsHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let configureChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.configure\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      configureChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appKeyArg = args[0] as! String
+        let themeArg: Theme? = nilOrValue(args[1])
+        let stringsArg: [String: String]? = nilOrValue(args[2])
+        Task { @MainActor in
+          do {
+            try await api.configure(appKey: appKeyArg, theme: themeArg, strings: stringsArg)
+            reply(wrapResult(nil))
+          } catch {
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      configureChannel.setMessageHandler(nil)
+    }
+    let verifyChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verify\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      verifyChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let platformsArg = args[0] as! [String]
+        let referenceArg = args[1] as! String
+        Task { @MainActor in
+          do {
+            let result = try await api.verify(platforms: platformsArg, reference: referenceArg)
+            reply(wrapResult(result))
+          } catch {
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      verifyChannel.setMessageHandler(nil)
+    }
+    let verifyTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verifyToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      verifyTokenChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let tokenArg = args[0] as! String
+        Task { @MainActor in
+          do {
+            let result = try await api.verifyToken(token: tokenArg)
+            reply(wrapResult(result))
+          } catch {
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      verifyTokenChannel.setMessageHandler(nil)
+    }
     let createChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.create\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       createChannel.setMessageHandler { message, reply in
@@ -1085,40 +966,6 @@ class ZktlsHostApiSetup {
       }
     } else {
       claimChannel.setMessageHandler(nil)
-    }
-    let createTreeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.createTree\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      createTreeChannel.setMessageHandler { _, reply in
-        Task { @MainActor in
-          do {
-            let result = try await api.createTree()
-            reply(wrapResult(result))
-          } catch {
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      createTreeChannel.setMessageHandler(nil)
-    }
-    let runTreeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.runTree\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      runTreeChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let sessionIdArg = args[0] as! String
-        let configArg = args[1] as! TreeRunConfig
-        let disclosureArg = args[2] as! TreeDisclosure
-        Task { @MainActor in
-          do {
-            let result = try await api.runTree(sessionId: sessionIdArg, config: configArg, disclosure: disclosureArg)
-            reply(wrapResult(result))
-          } catch {
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      runTreeChannel.setMessageHandler(nil)
     }
     let cancelChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.cancel\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

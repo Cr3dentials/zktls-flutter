@@ -131,111 +131,37 @@ class ProofReport {
   int receivedBytes;
 }
 
-// One per tree run. Mirrors the native TreeRunConfig field for field.
-class TreeRunConfig {
-  TreeRunConfig({
-    required this.baseUrl,
-    required this.appCredential,
-    required this.userIdHash,
-    required this.idempotencyKey,
-    required this.clientRegion,
-    required this.networkKey,
-    required this.platformId,
-    required this.trustBundleJson,
-    this.trustBundleUrl,
-    required this.trustOperatorKey,
-    required this.policyBundleJson,
-    required this.policyBundleDigest,
-    required this.relyingPartyNonceHex,
-    required this.resultUrl,
-    required this.resultToken,
-    required this.paramsJson,
-  });
+// The look of the SDK's own screens, for configure. Every field optional: one
+// left null keeps the SDK's default. Colors are "#RRGGBB" or "#AARRGGBB"; logo
+// names an image in the app, an Android drawable or an iOS asset.
+class Theme {
+  Theme({this.accent, this.background, this.text, this.logo});
 
-  String baseUrl;
-  String appCredential;
-  String userIdHash;
-  String idempotencyKey;
-  String clientRegion;
-  String networkKey;
-  String platformId;
-  String trustBundleJson;
-  // As SessionConfig.trustBundleUrl: null or empty keeps the bundle given.
-  String? trustBundleUrl;
-  String trustOperatorKey;
-  String policyBundleJson;
-  String policyBundleDigest;
-  String relyingPartyNonceHex;
-  String resultUrl;
-  String resultToken;
-  String paramsJson;
+  String? accent;
+  String? background;
+  String? text;
+  String? logo;
 }
 
-// The consent screen shown before the platform's pages open. All four are
-// required: a tree run has no standard text.
-class TreeDisclosure {
-  TreeDisclosure({
-    required this.title,
-    required this.message,
-    required this.accept,
-    required this.decline,
-  });
+// The native PlatformStatus enum.
+enum PlatformStatus { done, failed, notStarted }
 
-  String title;
-  String message;
-  String accept;
-  String decline;
+// How one platform ended; reason is set for a failure.
+class PlatformOutcome {
+  PlatformOutcome({required this.platform, required this.status, this.reason});
+
+  String platform;
+  PlatformStatus status;
+  String? reason;
 }
 
-// The native SourceEvidence enum.
-enum SourceEvidence { observed, attested }
+// What verify returns: never the platform's data, which goes to your server in
+// a signed webhook.
+class VerifyOutcome {
+  VerifyOutcome({required this.verificationId, required this.platforms});
 
-class TreeSource {
-  TreeSource({
-    required this.storeAs,
-    required this.evidence,
-    required this.rows,
-    required this.pages,
-    required this.bytes,
-    required this.complete,
-  });
-
-  String storeAs;
-  SourceEvidence evidence;
-  int rows; // u64
-  int pages;
-  int bytes; // u64
-  bool complete;
-}
-
-// What the app learns from a tree run: how it ended and each source's counts,
-// never the data.
-class TreeSummary {
-  TreeSummary({
-    required this.succeeded,
-    required this.error,
-    required this.sources,
-    this.claim,
-    required this.apiCalls,
-    required this.durationMs,
-    required this.delivered,
-    required this.deliveryError,
-    required this.resultBytes,
-    required this.isolation,
-    required this.handedOff,
-  });
-
-  bool succeeded;
-  String error;
-  List<TreeSource> sources;
-  Claim? claim;
-  int apiCalls;
-  int durationMs; // u64
-  bool delivered;
-  String deliveryError;
-  int resultBytes; // u64
-  String isolation;
-  bool handedOff;
+  String verificationId;
+  List<PlatformOutcome> platforms;
 }
 
 class ProgressEvent {
@@ -250,11 +176,25 @@ class ProgressEvent {
   int percent;
 }
 
-// The six verbs and runTree, plus create/dispose for the session lifetime. The
-// native side owns the ZktlsClient and its opaque handles, keyed by the
-// returned sessionId.
+// The SDK's facade, configure and verify, and the proof flow's verbs plus
+// create/dispose for the session lifetime. The native side owns each proof
+// session's ZktlsClient and its opaque handles, keyed by the returned sessionId.
 @HostApi()
 abstract class ZktlsHostApi {
+  // Sets the app's publishable key, zk_live_... or zk_test_..., and the look and
+  // words of the SDK's screens. strings maps a screen string's key to its text.
+  @async
+  void configure(String appKey, Theme? theme, Map<String, String>? strings);
+
+  // Verifies the platforms (our ids, run in this order) for one user, under the
+  // app's reference, with the SDK's own screens. Returns once the user leaves.
+  @async
+  VerifyOutcome verify(List<String> platforms, String reference);
+
+  // As verify, for the platforms and reference a token from your server carries.
+  @async
+  VerifyOutcome verifyToken(String token);
+
   @async
   String create(SessionConfig config);
 
@@ -269,18 +209,6 @@ abstract class ZktlsHostApi {
 
   @async
   Claim claim(String sessionId);
-
-  // A session for tree runs: a no-arg native ZktlsClient. It has no SessionConfig,
-  // so the proof verbs on it fail.
-  @async
-  String createTree();
-
-  @async
-  TreeSummary runTree(
-    String sessionId,
-    TreeRunConfig config,
-    TreeDisclosure disclosure,
-  );
 
   // Synchronous: must reach a verb in flight.
   void cancel(String sessionId);

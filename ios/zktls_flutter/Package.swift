@@ -14,7 +14,7 @@ let package = Package(
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
         // The zkTLS SDK, from its releases repo.
-        .package(url: "https://github.com/Cr3dentials/zktls-sdk-releases", from: "1.0.0")
+        .package(url: "https://github.com/Cr3dentials/zktls-sdk-releases", from: "2.0.1")
     ],
     targets: [
         .target(

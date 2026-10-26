@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'zktls_flutter'
-  s.version          = '1.0.0'
+  s.version          = '2.0.0'
   s.summary          = 'Flutter bridge for the zkTLS native SDK.'
   s.description      = <<-DESC
 Proves facts from a user's own account and runs platform packs, over the zkTLS native SDK.
@@ -17,7 +17,7 @@ Proves facts from a user's own account and runs platform packs, over the zkTLS n
   s.dependency 'Flutter'
   # The native zkTLS SDK, from the releases repo's pod: the app's Podfile lists
   # https://github.com/Cr3dentials/zktls-sdk-releases.git as a source.
-  s.dependency 'ZktlsSDK', '~> 1.0'
+  s.dependency 'ZktlsSDK', '~> 2.0', '>= 2.0.1'
   s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.
