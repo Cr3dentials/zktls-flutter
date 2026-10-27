@@ -54,6 +54,14 @@ void main() {
     expect(PlatformStatus.values.length, 3);
   });
 
+  test('ZktlsTheme carries each field, null when left out', () {
+    const theme = ZktlsTheme(accent: '#1E66F5', logo: 'brand_logo');
+    expect(theme.accent, '#1E66F5');
+    expect(theme.background, isNull);
+    expect(theme.text, isNull);
+    expect(theme.logo, 'brand_logo');
+  });
+
   test('SdkErrorCode covers every native variant', () {
     expect(SdkErrorCode.values.length, 13);
   });

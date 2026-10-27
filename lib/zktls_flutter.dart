@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'src/messages.g.dart';
 
 // The public types, re-exported from the generated schema so consumers import
-// them from the package root.
+// them from the package root. The schema's Theme is not among them: its name
+// would clash with Material's Theme, so the public type is ZktlsTheme, below.
 export 'src/messages.g.dart'
     show SessionConfig, Disclosure, Claim, TypedOutput, ProofReport, ProgressEvent, Phase,
-        Theme, VerifyOutcome, PlatformOutcome, PlatformStatus;
+        VerifyOutcome, PlatformOutcome, PlatformStatus;
 
 // The native SdkError/SdkException variants. A failed call throws a
 // PlatformException whose code is one of these; Transport, Policy and Refused
@@ -47,6 +48,19 @@ String? refusalOf(Object error) {
   return details is String ? details : null;
 }
 
+// The look of the SDK's own screens, for Zktls.configure; the native SDK's name.
+// Every field optional: one left null keeps the SDK's default. Colors are
+// "#RRGGBB" or "#AARRGGBB"; logo names an image in the app: an Android drawable
+// or an iOS asset.
+class ZktlsTheme {
+  const ZktlsTheme({this.accent, this.background, this.text, this.logo});
+
+  final String? accent;
+  final String? background;
+  final String? text;
+  final String? logo;
+}
+
 // The SDK: configure once, when the app starts, then verify per user. verify
 // shows the SDK's own screens, runs each platform, and returns how each platform
 // ended; your server gets the data in signed webhooks.
@@ -59,10 +73,21 @@ class Zktls {
   // words of the SDK's screens. strings maps a screen string's key to its text.
   static Future<void> configure(
     String appKey, {
-    Theme? theme,
+    ZktlsTheme? theme,
     Map<String, String>? strings,
   }) =>
-      _api.configure(appKey, theme, strings);
+      _api.configure(
+        appKey,
+        theme == null
+            ? null
+            : Theme(
+                accent: theme.accent,
+                background: theme.background,
+                text: theme.text,
+                logo: theme.logo,
+              ),
+        strings,
+      );
 
   // Verifies the platforms (our ids, run in this order) for one user, under your
   // reference, which every webhook carries. Returns once the user leaves the flow.

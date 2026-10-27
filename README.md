@@ -77,17 +77,18 @@ returns. On iOS, over the key window's top-most view controller.
 
 ## The look of the SDK's screens
 
-`configure` takes a theme and the screens' words:
+`configure` takes a `ZktlsTheme` and the screens' words:
 
 ```dart
 await Zktls.configure(
   'zk_live_…',
-  theme: Theme(accent: '#1E66F5', background: '#FFFFFF', text: '#111111', logo: 'brand_logo'),
+  theme: const ZktlsTheme(accent: '#1E66F5', background: '#FFFFFF', text: '#111111', logo: 'brand_logo'),
   strings: {'intro.title': 'Verify your accounts'}, // any screen string, by key
 );
 ```
 
-Colors are `#RRGGBB` or `#AARRGGBB`. `logo` names an image in your app: an Android drawable, an iOS
+`ZktlsTheme` is the native SDK's name, and does not clash with Material's `Theme`. Colors are `#RRGGBB` or
+`#AARRGGBB`. `logo` names an image in your app: an Android drawable, an iOS
 asset. A field you leave null keeps the SDK's default. The string keys are the SDK's own, such as `intro.title` or
 `disclosure.body`, the same on both platforms; keep the words in braces, such as `{platform}`, which the SDK
 fills in ([iOS](https://docs.cr3dentials.xyz/sdk/ios), [Android](https://docs.cr3dentials.xyz/sdk/android)).

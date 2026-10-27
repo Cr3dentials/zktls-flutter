@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.version          = '2.0.0'
   s.summary          = 'Flutter bridge for the zkTLS native SDK.'
   s.description      = <<-DESC
-Proves facts from a user's own account and runs platform packs, over the zkTLS native SDK.
+Verifies users' accounts (configure, verify) and proves facts from a user's own account (login, capture, prove, claim), over the zkTLS native SDK.
                        DESC
   s.homepage         = 'https://github.com/Cr3dentials/zktls-flutter'
   s.license          = { :file => '../LICENSE' }
