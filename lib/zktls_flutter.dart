@@ -9,10 +9,11 @@ export 'src/messages.g.dart'
     show SessionConfig, Disclosure, Claim, TypedOutput, ProofReport, ProgressEvent, Phase,
         VerifyOutcome, PlatformOutcome, PlatformStatus;
 
-// The native SdkError/SdkException variants. A failed call throws a
-// PlatformException whose code is one of these; Transport, Policy and Refused
-// also carry text in the message. Internal is a fault inside the SDK that was not
-// an SdkError.
+// The native SdkError/SdkException variants, and two of the plugin's own. A
+// failed call throws a PlatformException whose code is one of these; Transport,
+// Policy and Refused also carry text in the message. InvalidArgument is
+// configure given a theme color it cannot use; its message names the field.
+// Internal is a fault inside the SDK that was not an SdkError.
 enum SdkErrorCode {
   notLoggedIn,
   sessionLost,
@@ -26,6 +27,7 @@ enum SdkErrorCode {
   transport,
   policy,
   refused,
+  invalidArgument,
   internal,
 }
 
@@ -50,8 +52,10 @@ String? refusalOf(Object error) {
 
 // The look of the SDK's own screens, for Zktls.configure; the native SDK's name.
 // Every field optional: one left null keeps the SDK's default. Colors are
-// "#RRGGBB" or "#AARRGGBB"; logo names an image in the app: an Android drawable
-// or an iOS asset.
+// exactly "#RRGGBB" or "#AARRGGBB" (alpha first), hex digits in either case;
+// any other form makes configure throw a PlatformException with the code
+// InvalidArgument. logo names an image in the app: an Android drawable or an
+// iOS asset.
 class ZktlsTheme {
   const ZktlsTheme({this.accent, this.background, this.text, this.logo});
 

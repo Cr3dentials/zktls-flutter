@@ -87,11 +87,17 @@ await Zktls.configure(
 );
 ```
 
-`ZktlsTheme` is the native SDK's name, and does not clash with Material's `Theme`. Colors are `#RRGGBB` or
-`#AARRGGBB`. `logo` names an image in your app: an Android drawable, an iOS
-asset. A field you leave null keeps the SDK's default. The string keys are the SDK's own, such as `intro.title` or
-`disclosure.body`, the same on both platforms; keep the words in braces, such as `{platform}`, which the SDK
-fills in ([iOS](https://docs.cr3dentials.xyz/sdk/ios), [Android](https://docs.cr3dentials.xyz/sdk/android)).
+`ZktlsTheme` is the native SDK's name, and does not clash with Material's `Theme`. Colors are exactly
+`#RRGGBB` or `#AARRGGBB` (alpha first), with hex digits in either case; color names and other forms are refused.
+`logo` names an image in your app: an Android drawable, an iOS asset. A field you leave null keeps the SDK's
+default. The string keys are the SDK's own, such as `intro.title` or `disclosure.body`, the same on both
+platforms; keep the words in braces, such as `{platform}`, which the SDK fills in
+([iOS](https://docs.cr3dentials.xyz/sdk/ios), [Android](https://docs.cr3dentials.xyz/sdk/android)). Each value in
+`strings` is a `String`, as its type requires.
+
+A color in another form makes `configure` throw a `PlatformException` with the code `InvalidArgument` and a
+message naming it, such as `theme.accent must be #RRGGBB or #AARRGGBB`, on both platforms. The SDK's
+configuration is then left as it was.
 
 ## Prove a fact
 
@@ -136,7 +142,9 @@ and your backend verifies the claim itself
 - **Errors.** A failed call throws a `PlatformException` whose `code` is the SDK's error name, such as
   `Refused` ([errors](https://docs.cr3dentials.xyz/sdk/errors)); `sdkErrorCodeOf(e)` turns it into an
   `SdkErrorCode`. For a refusal, `refusalOf(e)` gives the reason, such as `device_not_verified` or
-  `app_key_invalid`. For `Transport`, `Policy` and `Refused`, `message` carries the SDK's text. `Internal` is a fault inside the SDK that was not one of its errors: report it.
+  `app_key_invalid`. For `Transport`, `Policy` and `Refused`, `message` carries the SDK's text.
+  `InvalidArgument` is the plugin's own: `configure` was given a theme color it cannot use, which `message`
+  names. `Internal` is a fault inside the SDK that was not one of its errors: report it.
 - **Logging.** Never log your app key in production builds, or a `SessionConfig`: it holds the app
   credential.
 

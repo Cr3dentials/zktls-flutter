@@ -45,8 +45,10 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
   // The SDK's facade: configure once, then verify per user. verify shows the
   // SDK's own screens over the key window's top view controller and holds its
   // own background time, so it needs none of the proof sessions' lifecycle here.
+  // A theme color it cannot use throws InvalidArgument and leaves the SDK's
+  // configuration as it was.
   func configure(appKey: String, theme: Theme?, strings: [String: String]?) async throws {
-    let sdkTheme = await toSdkTheme(theme)
+    let sdkTheme = try await toSdkTheme(theme)
     Zktls.configure(appKey: appKey, theme: sdkTheme, strings: strings ?? [:])
   }
 
@@ -227,23 +229,40 @@ private func toSdkDisclosure(_ d: Disclosure, _ domains: [String]) -> LoginDiscl
 }
 
 // The screens' theme. A color is "#RRGGBB" or "#AARRGGBB"; the logo is an image
-// asset's name in the app. A field left nil keeps the SDK's default.
+// asset's name in the app. A field left nil keeps the SDK's default. A color in
+// any other form throws InvalidArgument.
 @MainActor
-private func toSdkTheme(_ t: Theme?) -> ZktlsTheme {
+private func toSdkTheme(_ t: Theme?) throws -> ZktlsTheme {
   var theme = ZktlsTheme()
   guard let t = t else { return theme }
-  if let c = color(t.accent) { theme.accent = c }
-  if let c = color(t.background) { theme.background = c }
-  if let c = color(t.text) { theme.text = c }
+  if let hex = t.accent { theme.accent = try themeColor("accent", hex) }
+  if let hex = t.background { theme.background = try themeColor("background", hex) }
+  if let hex = t.text { theme.text = try themeColor("text", hex) }
   if let name = t.logo { theme.logo = UIImage(named: name) }
   return theme
 }
 
-private func color(_ hex: String?) -> UIColor? {
-  guard var h = hex?.trimmingCharacters(in: .whitespaces) else { return nil }
-  if h.hasPrefix("#") { h.removeFirst() }
-  guard h.count == 6 || h.count == 8, let v = UInt64(h, radix: 16) else { return nil }
-  let argb = h.count == 6 ? (0xFF00_0000 | v) : v
+// The theme's color `field`. Anything but "#RRGGBB" or "#AARRGGBB", color names
+// included, is an InvalidArgument error naming the field; Android refuses the
+// same values with the same message.
+private func themeColor(_ field: String, _ hex: String) throws -> UIColor {
+  guard let c = color(hex) else {
+    throw PigeonError(
+      code: "InvalidArgument", message: "theme.\(field) must be #RRGGBB or #AARRGGBB", details: nil)
+  }
+  return c
+}
+
+// Exactly "#RRGGBB" (opaque) or "#AARRGGBB", hex digits in either case; nil for
+// anything else.
+private func color(_ hex: String) -> UIColor? {
+  guard hex.hasPrefix("#") else { return nil }
+  let digits = hex.dropFirst()
+  guard digits.count == 6 || digits.count == 8,
+    digits.allSatisfy({ $0.isASCII && $0.isHexDigit }),
+    let v = UInt32(digits, radix: 16)
+  else { return nil }
+  let argb = digits.count == 6 ? (0xFF00_0000 | v) : v
   return UIColor(
     red: CGFloat((argb >> 16) & 0xFF) / 255,
     green: CGFloat((argb >> 8) & 0xFF) / 255,

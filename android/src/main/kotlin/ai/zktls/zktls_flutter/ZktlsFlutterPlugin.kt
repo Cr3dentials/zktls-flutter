@@ -2,7 +2,6 @@ package ai.zktls.zktls_flutter
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -238,18 +237,34 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   }
 
   // The screens' theme. A color is "#RRGGBB" or "#AARRGGBB"; the logo is a
-  // drawable's name in the app. A field left null keeps the SDK's default.
+  // drawable's name in the app. A field left null keeps the SDK's default. A
+  // color in any other form is an InvalidArgument error.
   private fun toSdkTheme(t: Theme?): SdkZktlsTheme {
     if (t == null) return SdkZktlsTheme()
     val logo = t.logo?.let {
       context.resources.getIdentifier(it, "drawable", context.packageName).takeIf { id -> id != 0 }
     }
     return SdkZktlsTheme(
-      accent = t.accent?.let { Color.parseColor(it) },
-      background = t.background?.let { Color.parseColor(it) },
-      text = t.text?.let { Color.parseColor(it) },
+      accent = t.accent?.let { themeColor("accent", it) },
+      background = t.background?.let { themeColor("background", it) },
+      text = t.text?.let { themeColor("text", it) },
       logo = logo,
     )
+  }
+
+  // Exactly "#RRGGBB" or "#AARRGGBB", hex digits in either case.
+  private val hexColor = Regex("#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})")
+
+  // The ARGB color int of the theme's color `field`, "#RRGGBB" (opaque) or
+  // "#AARRGGBB". Anything else, color names included, is an InvalidArgument
+  // error naming the field; iOS refuses the same values with the same message.
+  private fun themeColor(field: String, value: String): Int {
+    if (!hexColor.matches(value)) {
+      throw FlutterError("InvalidArgument", "theme.$field must be #RRGGBB or #AARRGGBB")
+    }
+    val digits = value.substring(1)
+    val argb = digits.toLong(16)
+    return (if (digits.length == 6) argb or 0xFF000000L else argb).toInt()
   }
 
   private fun toPigeonReport(r: SdkProofReport) = ProofReport(

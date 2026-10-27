@@ -34,6 +34,7 @@ void main() {
   test('sdkErrorCodeOf reads the native variant name', () {
     expect(sdkErrorCodeOf(PlatformException(code: 'NotLoggedIn')), SdkErrorCode.notLoggedIn);
     expect(sdkErrorCodeOf(PlatformException(code: 'Policy', message: 'x')), SdkErrorCode.policy);
+    expect(sdkErrorCodeOf(PlatformException(code: 'InvalidArgument', message: 'x')), SdkErrorCode.invalidArgument);
     expect(sdkErrorCodeOf(PlatformException(code: 'Unknown')), isNull);
     expect(sdkErrorCodeOf(StateError('x')), isNull);
   });
@@ -62,7 +63,7 @@ void main() {
     expect(theme.logo, 'brand_logo');
   });
 
-  test('SdkErrorCode covers every native variant', () {
-    expect(SdkErrorCode.values.length, 13);
+  test("SdkErrorCode covers every native variant and the plugin's own", () {
+    expect(SdkErrorCode.values.length, 14);
   });
 }
