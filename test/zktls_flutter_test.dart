@@ -34,11 +34,36 @@ void main() {
   test('sdkErrorCodeOf reads the native variant name', () {
     expect(sdkErrorCodeOf(PlatformException(code: 'NotLoggedIn')), SdkErrorCode.notLoggedIn);
     expect(sdkErrorCodeOf(PlatformException(code: 'Policy', message: 'x')), SdkErrorCode.policy);
+    expect(sdkErrorCodeOf(PlatformException(code: 'InvalidArgument', message: 'x')), SdkErrorCode.invalidArgument);
     expect(sdkErrorCodeOf(PlatformException(code: 'Unknown')), isNull);
     expect(sdkErrorCodeOf(StateError('x')), isNull);
   });
 
-  test('SdkErrorCode covers every native variant', () {
-    expect(SdkErrorCode.values.length, 12);
+  test("refusalOf reads a Refused error's reason", () {
+    final refused = PlatformException(code: 'Refused', message: 'x', details: 'device_not_verified');
+    expect(sdkErrorCodeOf(refused), SdkErrorCode.refused);
+    expect(refusalOf(refused), 'device_not_verified');
+    expect(refusalOf(PlatformException(code: 'Policy', message: 'x')), isNull);
+  });
+
+  test("VerifyOutcome carries each platform's status", () {
+    final outcome = VerifyOutcome(verificationId: 'v1', platforms: [
+      PlatformOutcome(platform: 'zktls-demo', status: PlatformStatus.done),
+      PlatformOutcome(platform: 'upwork-org-attested', status: PlatformStatus.failed, reason: 'x'),
+    ]);
+    expect(outcome.platforms.map((p) => p.status), [PlatformStatus.done, PlatformStatus.failed]);
+    expect(PlatformStatus.values.length, 3);
+  });
+
+  test('ZktlsTheme carries each field, null when left out', () {
+    const theme = ZktlsTheme(accent: '#1E66F5', logo: 'brand_logo');
+    expect(theme.accent, '#1E66F5');
+    expect(theme.background, isNull);
+    expect(theme.text, isNull);
+    expect(theme.logo, 'brand_logo');
+  });
+
+  test("SdkErrorCode covers every native variant and the plugin's own", () {
+    expect(SdkErrorCode.values.length, 14);
   });
 }

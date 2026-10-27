@@ -11,8 +11,8 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import ai.zktls.sdk.SdkException
-import ai.zktls.sdk.TreeWebViewHost
 import ai.zktls.sdk.WebViewLoginPresenter
+import ai.zktls.sdk.Zktls
 import ai.zktls.sdk.ZkTlsLifecycle
 import ai.zktls.sdk.ZkTlsSessionService
 import ai.zktls.sdk.ZktlsClient
@@ -20,13 +20,11 @@ import ai.zktls.sdk.Claim as SdkClaim
 import ai.zktls.sdk.LoginDisclosure as SdkLoginDisclosure
 import ai.zktls.sdk.Phase as SdkPhase
 import ai.zktls.sdk.ProofReport as SdkProofReport
+import ai.zktls.sdk.PlatformStatus as SdkPlatformStatus
 import ai.zktls.sdk.SessionConfig as SdkSessionConfig
-import ai.zktls.sdk.SourceEvidence as SdkSourceEvidence
-import ai.zktls.sdk.TreeDisclosure as SdkTreeDisclosure
-import ai.zktls.sdk.TreeRunConfig as SdkTreeRunConfig
-import ai.zktls.sdk.TreeSource as SdkTreeSource
-import ai.zktls.sdk.TreeSummary as SdkTreeSummary
 import ai.zktls.sdk.TypedOutput as SdkTypedOutput
+import ai.zktls.sdk.VerifyOutcome as SdkVerifyOutcome
+import ai.zktls.sdk.ZktlsTheme as SdkZktlsTheme
 
 // Implements the Pigeon-generated ZktlsHostApi. One native ZktlsClient per
 // session, keyed by a generated sessionId; Dart only ever holds the id. The
@@ -76,15 +74,27 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   override suspend fun create(config: SessionConfig): String =
     register(ZktlsClient(toSdkConfig(config)))
 
-  override suspend fun createTree(): String = register(ZktlsClient())
+  // The SDK's facade: configure once, then verify per user. verify shows the
+  // SDK's own screens over the current activity and keeps its session alive
+  // itself, so it needs none of the proof sessions' lifecycle here.
+  override suspend fun configure(appKey: String, theme: Theme?, strings: Map<String, String>?) = guarded {
+    Zktls.configure(appKey, toSdkTheme(theme), strings ?: emptyMap())
+  }
+
+  override suspend fun verify(platforms: List<String>, reference: String): VerifyOutcome = guarded {
+    val act = activity ?: throw FlutterError("Internal", "no current activity for the SDK's screens")
+    toPigeonOutcome(Zktls.verify(act, platforms, reference))
+  }
+
+  override suspend fun verifyToken(token: String): VerifyOutcome = guarded {
+    val act = activity ?: throw FlutterError("Internal", "no current activity for the SDK's screens")
+    toPigeonOutcome(Zktls.verify(act, token))
+  }
 
   private fun register(client: ZktlsClient): String {
     val sessionId = UUID.randomUUID().toString()
     // Registered before the id is returned so no early phase is missed.
     client.onProgress { phase, percent ->
-      // A pack that attests uploads to the attester once the page closes; the
-      // user may leave the app by then.
-      if (phase == SdkPhase.ATTESTING) main.post { hold(sessionId) }
       progress.emit(ProgressEvent(sessionId, toPigeonPhase(phase), percent.toLong()))
     }
     lifecycles[sessionId] = ZkTlsLifecycle(context, client.lifecycleHandle)
@@ -122,21 +132,6 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
   override suspend fun claim(sessionId: String): Claim = guarded {
     try {
       toPigeonClaim(requireSession(sessionId).claim())
-    } finally {
-      release(sessionId)
-    }
-  }
-
-  override suspend fun runTree(
-    sessionId: String,
-    config: TreeRunConfig,
-    disclosure: TreeDisclosure,
-  ): TreeSummary = guarded {
-    val client = requireSession(sessionId)
-    val act = activity ?: throw FlutterError("Internal", "no current activity for the tree WebView")
-    val host = TreeWebViewHost(act, toSdkTreeDisclosure(disclosure))
-    try {
-      toPigeonSummary(client.runTree(toSdkTreeConfig(config), host))
     } finally {
       release(sessionId)
     }
@@ -207,6 +202,8 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
       is SdkException.InsufficientMemory -> FlutterError("InsufficientMemory")
       is SdkException.Transport -> FlutterError("Transport", e.v1)
       is SdkException.Policy -> FlutterError("Policy", e.v1)
+      // The refusal code (device_not_verified, app_key_invalid, ...) is the details.
+      is SdkException.Refused -> FlutterError("Refused", e.message, e.code)
     }
   } catch (e: Throwable) {
     throw FlutterError("Internal", e.message)
@@ -239,34 +236,37 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     )
   }
 
-  private fun toSdkTreeConfig(c: TreeRunConfig) = SdkTreeRunConfig(
-    baseUrl = c.baseUrl,
-    appCredential = c.appCredential,
-    userIdHash = c.userIdHash,
-    idempotencyKey = c.idempotencyKey,
-    clientRegion = c.clientRegion,
-    networkKey = c.networkKey,
-    platformId = c.platformId,
-    trustBundleJson = c.trustBundleJson,
-    trustBundleUrl = c.trustBundleUrl ?: "",
-    trustOperatorKey = c.trustOperatorKey,
-    policyBundleJson = c.policyBundleJson,
-    policyBundleDigest = c.policyBundleDigest,
-    relyingPartyNonceHex = c.relyingPartyNonceHex,
-    resultUrl = c.resultUrl,
-    resultToken = c.resultToken,
-    paramsJson = c.paramsJson,
-  )
+  // The screens' theme. A color is "#RRGGBB" or "#AARRGGBB"; the logo is a
+  // drawable's name in the app. A field left null keeps the SDK's default. A
+  // color in any other form is an InvalidArgument error.
+  private fun toSdkTheme(t: Theme?): SdkZktlsTheme {
+    if (t == null) return SdkZktlsTheme()
+    val logo = t.logo?.let {
+      context.resources.getIdentifier(it, "drawable", context.packageName).takeIf { id -> id != 0 }
+    }
+    return SdkZktlsTheme(
+      accent = t.accent?.let { themeColor("accent", it) },
+      background = t.background?.let { themeColor("background", it) },
+      text = t.text?.let { themeColor("text", it) },
+      logo = logo,
+    )
+  }
 
-  private fun toSdkTreeDisclosure(d: TreeDisclosure) = SdkTreeDisclosure(
-    title = d.title,
-    message = d.message,
-    accept = d.accept,
-    decline = d.decline,
-  )
+  // Exactly "#RRGGBB" or "#AARRGGBB", hex digits in either case.
+  private val hexColor = Regex("#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})")
 
-  // The SDK's u64/u32 values are unsigned; Pigeon carries them as Long. The
-  // magnitudes here (timestamps, byte counts, epoch) sit well inside Long.
+  // The ARGB color int of the theme's color `field`, "#RRGGBB" (opaque) or
+  // "#AARRGGBB". Anything else, color names included, is an InvalidArgument
+  // error naming the field; iOS refuses the same values with the same message.
+  private fun themeColor(field: String, value: String): Int {
+    if (!hexColor.matches(value)) {
+      throw FlutterError("InvalidArgument", "theme.$field must be #RRGGBB or #AARRGGBB")
+    }
+    val digits = value.substring(1)
+    val argb = digits.toLong(16)
+    return (if (digits.length == 6) argb or 0xFF000000L else argb).toInt()
+  }
+
   private fun toPigeonReport(r: SdkProofReport) = ProofReport(
     accepted = r.accepted,
     verdict = r.verdict,
@@ -289,30 +289,19 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     encoded = c.encoded,
   )
 
-  private fun toPigeonSummary(s: SdkTreeSummary) = TreeSummary(
-    succeeded = s.succeeded,
-    error = s.error,
-    sources = s.sources.map(::toPigeonSource),
-    claim = s.claim?.let(::toPigeonClaim),
-    apiCalls = s.apiCalls.toLong(),
-    durationMs = s.durationMs.toLong(),
-    delivered = s.delivered,
-    deliveryError = s.deliveryError,
-    resultBytes = s.resultBytes.toLong(),
-    isolation = s.isolation,
-    handedOff = s.handedOff,
-  )
-
-  private fun toPigeonSource(s: SdkTreeSource) = TreeSource(
-    storeAs = s.storeAs,
-    evidence = when (s.evidence) {
-      SdkSourceEvidence.OBSERVED -> SourceEvidence.OBSERVED
-      SdkSourceEvidence.ATTESTED -> SourceEvidence.ATTESTED
+  private fun toPigeonOutcome(o: SdkVerifyOutcome) = VerifyOutcome(
+    verificationId = o.verificationId,
+    platforms = o.platforms.map {
+      PlatformOutcome(
+        platform = it.platform,
+        status = when (it.status) {
+          SdkPlatformStatus.DONE -> PlatformStatus.DONE
+          SdkPlatformStatus.FAILED -> PlatformStatus.FAILED
+          SdkPlatformStatus.NOT_STARTED -> PlatformStatus.NOT_STARTED
+        },
+        reason = it.reason,
+      )
     },
-    rows = s.rows.toLong(),
-    pages = s.pages.toLong(),
-    bytes = s.bytes.toLong(),
-    complete = s.complete,
   )
 
   private fun toPigeonPhase(p: SdkPhase): Phase = when (p) {

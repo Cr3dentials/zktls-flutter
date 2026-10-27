@@ -42,17 +42,36 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
     await register(ZktlsClient(config: toSdkConfig(config)))
   }
 
-  func createTree() async throws -> String {
-    await register(ZktlsClient())
+  // The SDK's facade: configure once, then verify per user. verify shows the
+  // SDK's own screens over the key window's top view controller and holds its
+  // own background time, so it needs none of the proof sessions' lifecycle here.
+  // A theme color it cannot use throws InvalidArgument and leaves the SDK's
+  // configuration as it was.
+  func configure(appKey: String, theme: Theme?, strings: [String: String]?) async throws {
+    let sdkTheme = try await toSdkTheme(theme)
+    Zktls.configure(appKey: appKey, theme: sdkTheme, strings: strings ?? [:])
+  }
+
+  func verify(platforms: [String], reference: String) async throws -> VerifyOutcome {
+    do {
+      return toPigeonOutcome(try await Zktls.verify(platforms, reference: reference))
+    } catch {
+      throw mapError(error)
+    }
+  }
+
+  func verifyToken(token: String) async throws -> VerifyOutcome {
+    do {
+      return toPigeonOutcome(try await Zktls.verify(token: token))
+    } catch {
+      throw mapError(error)
+    }
   }
 
   private func register(_ client: ZktlsClient) async -> String {
     let sessionId = UUID().uuidString
     // Registered before the id is returned so no early phase is missed.
     await client.onProgress { [weak self] phase, percent in
-      // A pack that attests uploads to the attester: hold background time until
-      // runTree returns.
-      if phase == .attesting { self?.hold(sessionId) }
       self?.progress.emit(
         ProgressEvent(sessionId: sessionId, phase: toPigeonPhase(phase), percent: Int64(percent))
       )
@@ -131,17 +150,6 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
     }
   }
 
-  func runTree(sessionId: String, config: TreeRunConfig, disclosure: TreeDisclosure) async throws -> TreeSummary {
-    let client = try require(sessionId)
-    let host = try await makeTreeHost(disclosure)
-    defer { release(sessionId) }
-    do {
-      return toPigeonSummary(try await client.runTree(config: toSdkTreeConfig(config), host: host))
-    } catch {
-      throw mapError(error)
-    }
-  }
-
   func cancel(sessionId: String) throws {
     client(sessionId)?.cancel()
   }
@@ -163,14 +171,6 @@ public class ZktlsFlutterPlugin: NSObject, FlutterPlugin, ZktlsHostApi {
       return WebViewLoginPresenter(presentingFrom: vc) { domains in toSdkDisclosure(disclosure, domains) }
     }
     return WebViewLoginPresenter(presentingFrom: vc)
-  }
-
-  @MainActor
-  private func makeTreeHost(_ disclosure: TreeDisclosure) throws -> TreeWebViewHost {
-    guard let vc = topViewController() else {
-      throw PigeonError(code: "Internal", message: "no view controller for the tree WebView", details: nil)
-    }
-    return TreeWebViewHost(presentingFrom: vc, disclosure: toSdkTreeDisclosure(disclosure))
   }
 }
 
@@ -228,34 +228,49 @@ private func toSdkDisclosure(_ d: Disclosure, _ domains: [String]) -> LoginDiscl
   return disclosure
 }
 
-private func toSdkTreeConfig(_ c: TreeRunConfig) -> ZktlsSDK.TreeRunConfig {
-  ZktlsSDK.TreeRunConfig(
-    baseUrl: c.baseUrl,
-    appCredential: c.appCredential,
-    userIdHash: c.userIdHash,
-    idempotencyKey: c.idempotencyKey,
-    clientRegion: c.clientRegion,
-    networkKey: c.networkKey,
-    platformId: c.platformId,
-    trustBundleJson: c.trustBundleJson,
-    trustBundleUrl: c.trustBundleUrl ?? "",
-    trustOperatorKey: c.trustOperatorKey,
-    policyBundleJson: c.policyBundleJson,
-    policyBundleDigest: c.policyBundleDigest,
-    relyingPartyNonceHex: c.relyingPartyNonceHex,
-    resultUrl: c.resultUrl,
-    resultToken: c.resultToken,
-    paramsJson: c.paramsJson
+// The screens' theme. A color is "#RRGGBB" or "#AARRGGBB"; the logo is an image
+// asset's name in the app. A field left nil keeps the SDK's default. A color in
+// any other form throws InvalidArgument.
+@MainActor
+private func toSdkTheme(_ t: Theme?) throws -> ZktlsTheme {
+  var theme = ZktlsTheme()
+  guard let t = t else { return theme }
+  if let hex = t.accent { theme.accent = try themeColor("accent", hex) }
+  if let hex = t.background { theme.background = try themeColor("background", hex) }
+  if let hex = t.text { theme.text = try themeColor("text", hex) }
+  if let name = t.logo { theme.logo = UIImage(named: name) }
+  return theme
+}
+
+// The theme's color `field`. Anything but "#RRGGBB" or "#AARRGGBB", color names
+// included, is an InvalidArgument error naming the field; Android refuses the
+// same values with the same message.
+private func themeColor(_ field: String, _ hex: String) throws -> UIColor {
+  guard let c = color(hex) else {
+    throw PigeonError(
+      code: "InvalidArgument", message: "theme.\(field) must be #RRGGBB or #AARRGGBB", details: nil)
+  }
+  return c
+}
+
+// Exactly "#RRGGBB" (opaque) or "#AARRGGBB", hex digits in either case; nil for
+// anything else.
+private func color(_ hex: String) -> UIColor? {
+  guard hex.hasPrefix("#") else { return nil }
+  let digits = hex.dropFirst()
+  guard digits.count == 6 || digits.count == 8,
+    digits.allSatisfy({ $0.isASCII && $0.isHexDigit }),
+    let v = UInt32(digits, radix: 16)
+  else { return nil }
+  let argb = digits.count == 6 ? (0xFF00_0000 | v) : v
+  return UIColor(
+    red: CGFloat((argb >> 16) & 0xFF) / 255,
+    green: CGFloat((argb >> 8) & 0xFF) / 255,
+    blue: CGFloat(argb & 0xFF) / 255,
+    alpha: CGFloat((argb >> 24) & 0xFF) / 255
   )
 }
 
-private func toSdkTreeDisclosure(_ d: TreeDisclosure) -> ZktlsSDK.TreeDisclosure {
-  ZktlsSDK.TreeDisclosure(title: d.title, message: d.message, accept: d.accept, decline: d.decline)
-}
-
-// The SDK's u64/u32 values are unsigned; Pigeon carries them as Int64. u64 is
-// reinterpreted bit for bit (matching the Android Long conversion); the
-// magnitudes here sit well inside Int64 anyway.
 private func toPigeonReport(_ r: ZktlsSDK.ProofReport) -> ProofReport {
   ProofReport(
     accepted: r.accepted,
@@ -282,30 +297,18 @@ private func toPigeonClaim(_ c: ZktlsSDK.Claim) -> Claim {
   )
 }
 
-private func toPigeonSummary(_ s: ZktlsSDK.TreeSummary) -> TreeSummary {
-  TreeSummary(
-    succeeded: s.succeeded,
-    error: s.error,
-    sources: s.sources.map(toPigeonSource),
-    claim: s.claim.map(toPigeonClaim),
-    apiCalls: Int64(s.apiCalls),
-    durationMs: Int64(bitPattern: s.durationMs),
-    delivered: s.delivered,
-    deliveryError: s.deliveryError,
-    resultBytes: Int64(bitPattern: s.resultBytes),
-    isolation: s.isolation,
-    handedOff: s.handedOff
-  )
-}
-
-private func toPigeonSource(_ s: ZktlsSDK.TreeSource) -> TreeSource {
-  TreeSource(
-    storeAs: s.storeAs,
-    evidence: s.evidence == .attested ? .attested : .observed,
-    rows: Int64(bitPattern: s.rows),
-    pages: Int64(s.pages),
-    bytes: Int64(bitPattern: s.bytes),
-    complete: s.complete
+private func toPigeonOutcome(_ o: ZktlsSDK.VerifyOutcome) -> VerifyOutcome {
+  VerifyOutcome(
+    verificationId: o.verificationId,
+    platforms: o.platforms.map { p in
+      let status: PlatformStatus
+      switch p.status {
+      case .done: status = .done
+      case .failed: status = .failed
+      case .notStarted: status = .notStarted
+      }
+      return PlatformOutcome(platform: p.platform, status: status, reason: p.reason)
+    }
   )
 }
 
@@ -345,6 +348,8 @@ private func mapError(_ error: Error) -> PigeonError {
   case .InsufficientMemory: return PigeonError(code: "InsufficientMemory", message: nil, details: nil)
   case .Transport(let text): return PigeonError(code: "Transport", message: text, details: nil)
   case .Policy(let text): return PigeonError(code: "Policy", message: text, details: nil)
+  // The refusal code (device_not_verified, app_key_invalid, ...) is the details.
+  case .Refused(let code, let message): return PigeonError(code: "Refused", message: message, details: code)
   @unknown default: return PigeonError(code: "Internal", message: nil, details: nil)
   }
 }
