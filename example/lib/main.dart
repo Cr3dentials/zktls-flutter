@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _verify() async {
     setState(() => _log.clear());
     if (settings.appKey.isEmpty) {
-      _append('No app key: fill example/lib/settings.dart');
+      _append('No app key: run with --dart-define=ZKTLS_APP_KEY=...');
       return;
     }
     setState(() => _running = true);
