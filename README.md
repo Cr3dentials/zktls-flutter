@@ -10,7 +10,7 @@ does the work, and Dart drives it through one API on both platforms, generated w
 | | iOS | Android |
 |---|---|---|
 | Minimum OS | iOS 15.0 | Android 7.0 (API 24) |
-| The native SDK | `ZktlsSDK` 2.0.1 or later, from [zktls-sdk-releases](https://github.com/Cr3dentials/zktls-sdk-releases) (Swift Package Manager or CocoaPods) | `xyz.cr3dentials:zktls-sdk:2.0.1`, from Maven Central |
+| The native SDK | `ZktlsSDK` 2.1.1 or later, from [zktls-sdk-releases](https://github.com/Cr3dentials/zktls-sdk-releases) (Swift Package Manager or CocoaPods) | `xyz.cr3dentials:zktls-sdk:2.1.1`, from Maven Central |
 
 The SDK's guide holds the details this page links to: start with its
 [overview](https://docs.cr3dentials.xyz/sdk/overview).
@@ -165,7 +165,7 @@ flutter run --dart-define=ZKTLS_APP_KEY=zk_test_…
 ## Versions
 
 Releases follow [Semantic Versioning](https://semver.org/). Version 2 of the plugin wraps version 2 of the
-SDK: it depends on 2.0.1 or later, within 2.x.
+SDK: it depends on 2.1.1 or later, within 2.x.
 
 ## License
 
