@@ -17,7 +17,7 @@ Verifies users' accounts (configure, verify) and proves facts from a user's own 
   s.dependency 'Flutter'
   # The native zkTLS SDK, from the releases repo's pod: the app's Podfile lists
   # https://github.com/Cr3dentials/zktls-sdk-releases.git as a source.
-  s.dependency 'ZktlsSDK', '~> 2.1', '>= 2.1.1'
+  s.dependency 'ZktlsSDK', '~> 2.2', '>= 2.2.0'
   s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.

@@ -74,7 +74,7 @@ kotlin {
 dependencies {
     // The native zkTLS SDK, from Maven Central; its POM brings the transitive
     // deps (JNA, coroutines).
-    implementation("xyz.cr3dentials:zktls-sdk:2.1.1")
+    implementation("xyz.cr3dentials:zktls-sdk:2.2.0")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.mockito:mockito-core:5.0.0")
