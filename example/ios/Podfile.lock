@@ -4,8 +4,8 @@ PODS:
     - Flutter
   - zktls_flutter (2.0.0):
     - Flutter
-    - ZktlsSDK (>= 2.1.1, ~> 2.1)
-  - ZktlsSDK (2.1.1)
+    - ZktlsSDK (>= 2.2.0, ~> 2.2)
+  - ZktlsSDK (2.2.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -27,8 +27,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  zktls_flutter: defae157198e12fedc984946435a8854611bbda1
-  ZktlsSDK: 805d6dfbab7734f8bb013740601e8bab051e3a7e
+  zktls_flutter: 390ff7beef3e7949384f38d1675f98f17bc158b3
+  ZktlsSDK: c0663d06c092ea07c089b8e482a3653591afbae6
 
 PODFILE CHECKSUM: 5a5b001f36e3db8af85e4dd820407823b8440e9a
 
