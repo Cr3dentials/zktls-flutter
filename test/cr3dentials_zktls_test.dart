@@ -1,6 +1,6 @@
+import 'package:cr3dentials_zktls/cr3dentials_zktls.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zktls_flutter/zktls_flutter.dart';
 
 // The bridge itself needs a running engine, so these cover only the pure Dart
 // surface: that the public model types and error codes are wired as expected.

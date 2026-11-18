@@ -1,9 +1,9 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint zktls_flutter.podspec` to validate before publishing.
+# Run `pod lib lint cr3dentials_zktls.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'zktls_flutter'
+  s.name             = 'cr3dentials_zktls'
   s.version          = '2.0.0'
   s.summary          = 'Flutter bridge for the zkTLS native SDK.'
   s.description      = <<-DESC
@@ -13,7 +13,7 @@ Verifies users' accounts (configure, verify) and proves facts from a user's own 
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Cr3dentials' => 'https://github.com/Cr3dentials' }
   s.source           = { :path => '.' }
-  s.source_files = 'zktls_flutter/Sources/zktls_flutter/**/*'
+  s.source_files = 'cr3dentials_zktls/Sources/cr3dentials_zktls/**/*'
   s.dependency 'Flutter'
   # The native zkTLS SDK, from the releases repo's pod: the app's Podfile lists
   # https://github.com/Cr3dentials/zktls-sdk-releases.git as a source.
@@ -28,5 +28,5 @@ Verifies users' accounts (configure, verify) and proves facts from a user's own 
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your
   # plugin's privacy impact, and then uncomment this line. For more information,
   # see https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  # s.resource_bundles = {'zktls_flutter_privacy' => ['zktls_flutter/Sources/zktls_flutter/PrivacyInfo.xcprivacy']}
+  # s.resource_bundles = {'cr3dentials_zktls_privacy' => ['cr3dentials_zktls/Sources/cr3dentials_zktls/PrivacyInfo.xcprivacy']}
 end

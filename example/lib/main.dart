@@ -1,6 +1,6 @@
+import 'package:cr3dentials_zktls/cr3dentials_zktls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zktls_flutter/zktls_flutter.dart';
 
 import 'settings.dart';
 

@@ -13,8 +13,8 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/messages.g.dart',
     kotlinOut: 'android/src/main/kotlin/ai/zktls/zktls_flutter/Messages.g.kt',
     kotlinOptions: KotlinOptions(package: 'ai.zktls.zktls_flutter'),
-    swiftOut: 'ios/zktls_flutter/Sources/zktls_flutter/Messages.g.swift',
-    dartPackageName: 'zktls_flutter',
+    swiftOut: 'ios/cr3dentials_zktls/Sources/cr3dentials_zktls/Messages.g.swift',
+    dartPackageName: 'cr3dentials_zktls',
   ),
 )
 

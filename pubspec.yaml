@@ -1,4 +1,4 @@
-name: zktls_flutter
+name: cr3dentials_zktls
 description: "Flutter bridge for the Cr3dentials zkTLS SDK: verifies users' accounts (configure, verify) and proves facts (login, capture, prove, claim) from Dart over the compiled native binary."
 version: 2.0.0
 repository: https://github.com/Cr3dentials/zktls-flutter
