@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "zktls_flutter",
+    name: "cr3dentials_zktls",
     platforms: [
         .iOS("15.0")
     ],
     products: [
-        .library(name: "zktls-flutter", targets: ["zktls_flutter"])
+        .library(name: "cr3dentials-zktls", targets: ["cr3dentials_zktls"])
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
@@ -18,7 +18,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "zktls_flutter",
+            name: "cr3dentials_zktls",
             dependencies: [
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
                 .product(name: "ZktlsSDK", package: "zktls-sdk-releases")

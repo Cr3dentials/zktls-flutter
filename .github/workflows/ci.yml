@@ -53,12 +53,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          path: zktls_flutter
+          path: cr3dentials_zktls
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.47.6
           channel: stable
-      - run: cd zktls_flutter/example && flutter build ios --simulator --debug
+      - run: cd cr3dentials_zktls/example && flutter build ios --simulator --debug
 
   # CocoaPods, for apps that turn Swift Package Manager off.
   build-ios-cocoapods:

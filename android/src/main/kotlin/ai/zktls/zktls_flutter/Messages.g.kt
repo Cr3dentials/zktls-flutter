@@ -853,7 +853,7 @@ interface ZktlsHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: ZktlsHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.configure$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.configure$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -875,7 +875,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verify$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.verify$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -895,7 +895,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verifyToken$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.verifyToken$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -914,7 +914,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.create$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.create$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -933,7 +933,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.login$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.login$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -954,7 +954,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.capture$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.capture$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -974,7 +974,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.prove$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.prove$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -993,7 +993,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.claim$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.claim$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1012,7 +1012,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.cancel$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.cancel$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1030,7 +1030,7 @@ interface ZktlsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.dispose$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.dispose$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1092,7 +1092,7 @@ class PigeonEventSink<T>(private val sink: EventChannel.EventSink) {
 abstract class ProgressStreamHandler : MessagesPigeonEventChannelWrapper<ProgressEvent> {
   companion object {
     fun register(messenger: BinaryMessenger, streamHandler: ProgressStreamHandler, instanceName: String = "") {
-      var channelName: String = "dev.flutter.pigeon.zktls_flutter.ZktlsEventApi.progress"
+      var channelName: String = "dev.flutter.pigeon.cr3dentials_zktls.ZktlsEventApi.progress"
       if (instanceName.isNotEmpty()) {
         channelName += ".$instanceName"
       }

@@ -1,6 +1,6 @@
-# zktls_flutter_example
+# cr3dentials_zktls_example
 
-Demonstrates how to use the zktls_flutter plugin.
+Demonstrates how to use the cr3dentials_zktls plugin.
 
 ## Getting Started
 

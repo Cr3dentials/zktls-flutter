@@ -1,4 +1,4 @@
-# zktls-flutter
+# cr3dentials_zktls
 
 Verify your users' accounts from a Flutter app with the [Cr3dentials zkTLS SDK](https://docs.cr3dentials.xyz/sdk/overview):
 `Zktls.configure` once, at launch, and `Zktls.verify` per user. The SDK shows its own screens, opens each
@@ -22,7 +22,7 @@ Dart 3.13 or later. Android 7.0 (API 24) or later. iOS 15.0 or later.
 ## Install
 
 ```sh
-flutter pub add zktls_flutter
+flutter pub add cr3dentials_zktls
 ```
 
 Android needs nothing more: Gradle fetches the SDK from Maven Central. On iOS, with Swift Package
@@ -44,8 +44,8 @@ simulators and emulators and runs only the demo platform, `zktls-demo` (any user
 ## Verify a user
 
 ```dart
+import 'package:cr3dentials_zktls/cr3dentials_zktls.dart';
 import 'package:flutter/services.dart';
-import 'package:zktls_flutter/zktls_flutter.dart';
 
 // Once, when your app starts.
 await Zktls.configure('zk_test_…');

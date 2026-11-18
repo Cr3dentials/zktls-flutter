@@ -1,33 +1,33 @@
 PODS:
+  - cr3dentials_zktls (2.0.0):
+    - Flutter
+    - ZktlsSDK (>= 2.2.0, ~> 2.2)
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - zktls_flutter (2.0.0):
-    - Flutter
-    - ZktlsSDK (>= 2.2.0, ~> 2.2)
   - ZktlsSDK (2.2.0)
 
 DEPENDENCIES:
+  - cr3dentials_zktls (from `.symlinks/plugins/cr3dentials_zktls/ios`)
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - zktls_flutter (from `.symlinks/plugins/zktls_flutter/ios`)
 
 SPEC REPOS:
   https://github.com/Cr3dentials/zktls-sdk-releases.git:
     - ZktlsSDK
 
 EXTERNAL SOURCES:
+  cr3dentials_zktls:
+    :path: ".symlinks/plugins/cr3dentials_zktls/ios"
   Flutter:
     :path: Flutter
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
-  zktls_flutter:
-    :path: ".symlinks/plugins/zktls_flutter/ios"
 
 SPEC CHECKSUMS:
+  cr3dentials_zktls: da22fd6dc301df135ba8a2cde8b9c74adce0a861
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  zktls_flutter: 390ff7beef3e7949384f38d1675f98f17bc158b3
   ZktlsSDK: c0663d06c092ea07c089b8e482a3653591afbae6
 
 PODFILE CHECKSUM: 5a5b001f36e3db8af85e4dd820407823b8440e9a

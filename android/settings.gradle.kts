@@ -1,1 +1,1 @@
-rootProject.name = "zktls_flutter"
+rootProject.name = "cr3dentials_zktls"

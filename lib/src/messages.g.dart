@@ -812,7 +812,7 @@ class ZktlsHostApi {
 
 
   Future<void> configure(String appKey, Theme? theme, Map<String, String>? strings) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.configure$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.configure$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -830,7 +830,7 @@ class ZktlsHostApi {
   }
 
   Future<VerifyOutcome> verify(List<String> platforms, String reference) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verify$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.verify$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -849,7 +849,7 @@ class ZktlsHostApi {
   }
 
   Future<VerifyOutcome> verifyToken(String token) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verifyToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.verifyToken$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -868,7 +868,7 @@ class ZktlsHostApi {
   }
 
   Future<String> create(SessionConfig config) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.create$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.create$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -887,7 +887,7 @@ class ZktlsHostApi {
   }
 
   Future<void> login(String sessionId, Disclosure? disclosure) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.login$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.login$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -905,7 +905,7 @@ class ZktlsHostApi {
   }
 
   Future<void> capture(String sessionId) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.capture$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.capture$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -923,7 +923,7 @@ class ZktlsHostApi {
   }
 
   Future<ProofReport> prove(String sessionId) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.prove$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.prove$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -942,7 +942,7 @@ class ZktlsHostApi {
   }
 
   Future<Claim> claim(String sessionId) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.claim$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.claim$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -961,7 +961,7 @@ class ZktlsHostApi {
   }
 
   Future<void> cancel(String sessionId) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.cancel$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.cancel$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -979,7 +979,7 @@ class ZktlsHostApi {
   }
 
   Future<void> dispose(String sessionId) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.dispose$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.dispose$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1008,7 +1008,7 @@ Stream<ProgressEvent> progress( {String instanceName = ''}) {
     instanceName = '.$instanceName';
   }
   final EventChannel progressChannel =
-      EventChannel('dev.flutter.pigeon.zktls_flutter.ZktlsEventApi.progress$instanceName', pigeonMethodCodec);
+      EventChannel('dev.flutter.pigeon.cr3dentials_zktls.ZktlsEventApi.progress$instanceName', pigeonMethodCodec);
   return progressChannel.receiveBroadcastStream().map((dynamic event) {
     return event as ProgressEvent;
   });

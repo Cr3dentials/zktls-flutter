@@ -331,7 +331,7 @@ private func toPigeonPhase(_ p: ZktlsSDK.Phase) -> Phase {
 }
 
 // Maps every SdkError to the code Dart matches on (see SdkErrorCode in
-// lib/zktls_flutter.dart); anything else is Internal.
+// lib/cr3dentials_zktls.dart); anything else is Internal.
 private func mapError(_ error: Error) -> PigeonError {
   guard let e = error as? SdkError else {
     return PigeonError(code: "Internal", message: (error as NSError).localizedDescription, details: nil)

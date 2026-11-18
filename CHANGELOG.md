@@ -1,7 +1,7 @@
 ## 2.0.0
 
 The first public release, on the zkTLS SDK 2.2.0 or later within 2.x. Version 2 of the plugin wraps
-version 2 of the SDK.
+version 2 of the SDK. Published as `cr3dentials_zktls`; `zktls_flutter` is discontinued.
 
 * `Zktls.configure(appKey, theme:, strings:)` once, then `Zktls.verify(platforms, reference)` or
   `Zktls.verifyToken(token)` per user, returning a `VerifyOutcome`. The theme is a `ZktlsTheme`, the

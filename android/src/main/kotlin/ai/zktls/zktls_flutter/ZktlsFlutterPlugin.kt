@@ -184,7 +184,7 @@ class ZktlsFlutterPlugin : FlutterPlugin, ActivityAware, ZktlsHostApi {
     sessions[sessionId] ?: throw FlutterError("Internal", "unknown session")
 
   // Maps SdkException to a coded FlutterError so Dart sees the right error code
-  // (see SdkErrorCode in lib/zktls_flutter.dart); anything else is Internal.
+  // (see SdkErrorCode in lib/cr3dentials_zktls.dart); anything else is Internal.
   private suspend fun <T> guarded(block: suspend () -> T): T = try {
     block()
   } catch (e: FlutterError) {

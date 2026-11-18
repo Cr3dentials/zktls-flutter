@@ -827,7 +827,7 @@ class ZktlsHostApiSetup {
   /// Sets up an instance of `ZktlsHostApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: ZktlsHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let configureChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.configure\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let configureChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.configure\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       configureChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -846,7 +846,7 @@ class ZktlsHostApiSetup {
     } else {
       configureChannel.setMessageHandler(nil)
     }
-    let verifyChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verify\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let verifyChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.verify\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       verifyChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -864,7 +864,7 @@ class ZktlsHostApiSetup {
     } else {
       verifyChannel.setMessageHandler(nil)
     }
-    let verifyTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.verifyToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let verifyTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.verifyToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       verifyTokenChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -881,7 +881,7 @@ class ZktlsHostApiSetup {
     } else {
       verifyTokenChannel.setMessageHandler(nil)
     }
-    let createChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.create\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let createChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.create\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       createChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -898,7 +898,7 @@ class ZktlsHostApiSetup {
     } else {
       createChannel.setMessageHandler(nil)
     }
-    let loginChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.login\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let loginChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.login\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       loginChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -916,7 +916,7 @@ class ZktlsHostApiSetup {
     } else {
       loginChannel.setMessageHandler(nil)
     }
-    let captureChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.capture\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let captureChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.capture\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       captureChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -933,7 +933,7 @@ class ZktlsHostApiSetup {
     } else {
       captureChannel.setMessageHandler(nil)
     }
-    let proveChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.prove\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let proveChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.prove\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       proveChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -950,7 +950,7 @@ class ZktlsHostApiSetup {
     } else {
       proveChannel.setMessageHandler(nil)
     }
-    let claimChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.claim\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let claimChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.claim\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       claimChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -967,7 +967,7 @@ class ZktlsHostApiSetup {
     } else {
       claimChannel.setMessageHandler(nil)
     }
-    let cancelChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.cancel\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let cancelChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.cancel\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       cancelChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -982,7 +982,7 @@ class ZktlsHostApiSetup {
     } else {
       cancelChannel.setMessageHandler(nil)
     }
-    let disposeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.zktls_flutter.ZktlsHostApi.dispose\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let disposeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cr3dentials_zktls.ZktlsHostApi.dispose\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       disposeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1055,7 +1055,7 @@ class ProgressStreamHandler: PigeonEventChannelWrapper<ProgressEvent> {
   static func register(with messenger: FlutterBinaryMessenger,
                       instanceName: String = "",
                       streamHandler: ProgressStreamHandler) {
-    var channelName = "dev.flutter.pigeon.zktls_flutter.ZktlsEventApi.progress"
+    var channelName = "dev.flutter.pigeon.cr3dentials_zktls.ZktlsEventApi.progress"
     if !instanceName.isEmpty {
       channelName += ".\(instanceName)"
     }
